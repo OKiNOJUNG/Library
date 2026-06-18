@@ -1,0 +1,172 @@
+/* Custom CSS for Light Glass Theme */
+
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --glass-shadow: rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background-color: #f8fafc; /* Tailwind gray-50 */
+}
+
+/* Glassmorphism Classes */
+.glass-nav {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 4px 6px -1px var(--glass-shadow);
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 30px var(--glass-shadow);
+}
+
+.glass-input {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
+    color: #1f2937; /* gray-800 */
+}
+
+.glass-input:focus {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #9333ea; /* Purple 600 */
+    box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.2);
+    outline: none;
+}
+
+.glass-btn {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px var(--glass-shadow);
+}
+
+.glass-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px var(--glass-shadow);
+}
+
+.nav-btn {
+    color: #6b7280; /* gray-500 */
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    color: #4b5563; /* gray-700 */
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.nav-btn.active {
+    color: #9333ea; /* Purple 600 */
+    background: rgba(147, 51, 234, 0.1);
+}
+
+/* Custom Scrollbar for tables */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(147, 51, 234, 0.3); /* Purple */
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(147, 51, 234, 0.6);
+}
+
+/* FullCalendar Light Theme Overrides */
+.fc-theme-standard .fc-scrollgrid, 
+.fc-theme-standard td, 
+.fc-theme-standard th {
+    border-color: rgba(0, 0, 0, 0.05) !important;
+}
+.fc-col-header-cell-cushion, 
+.fc-daygrid-day-number {
+    color: #4b5563 !important; /* gray-600 */
+}
+.fc-event {
+    border: none !important;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 0.85em;
+}
+.fc-day-today {
+    background: rgba(147, 51, 234, 0.05) !important;
+}
+
+/* Print Styles */
+@media print {
+    @page {
+        size: A4;
+        margin: 10mm;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+    body > *:not(#modal-sticker) {
+        display: none !important;
+    }
+    #modal-sticker {
+        position: static !important;
+        display: block !important;
+        background: transparent !important;
+    }
+    #modal-sticker > div {
+        position: static !important;
+        transform: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: none !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    #modal-sticker > div > div:first-child {
+        display: none !important;
+    }
+    #print-area {
+        position: static !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        border: none !important;
+    }
+    #print-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15mm;
+        width: 100%;
+        align-content: start;
+        align-items: start;
+    }
+    .sticker-item {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        border: 2px solid #e5e7eb !important;
+        padding: 1.5rem !important;
+        background: white !important;
+        color: black !important;
+    }
+}
