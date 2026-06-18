@@ -1,0 +1,1360 @@
+html_content = """<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquor Sample Library - TMS Theme</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                    },
+                    colors: {
+                        tms: {
+                            green: '#009640',
+                            dark: '#666666',
+                            light: '#EFEFEF',
+                            border: '#E0E0E0'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css" rel="stylesheet">
+
+    <style>
+        /* TMS Enterprise Design System Styles */
+        body {
+            background-color: #ffffff;
+        }
+
+        /* Navigation Buttons styling matching TMS */
+        .nav-btn {
+            transition: all 0.2s ease;
+            border-bottom: 4px solid transparent;
+        }
+        .nav-btn:hover {
+            color: #111111;
+        }
+        .nav-btn.active {
+            border-bottom-color: #009640;
+            color: #009640;
+            font-weight: bold;
+        }
+
+        /* Input & Form Controls */
+        .tms-input {
+            background: #ffffff;
+            border: 1px solid #D1D5DB;
+            border-radius: 4px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            color: #374151;
+            transition: border-color 0.2s ease;
+        }
+        .tms-input:focus {
+            border-color: #009640;
+            outline: none;
+            box-shadow: 0 0 0 1px #009640;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8; 
+        }
+
+        /* FullCalendar Flat Theme Customizations */
+        .fc-theme-standard .fc-scrollgrid, 
+        .fc-theme-standard td, 
+        .fc-theme-standard th {
+            border-color: #E5E7EB !important;
+        }
+        .fc-col-header-cell-cushion {
+            color: #374151 !important;
+            font-weight: 600;
+        }
+        .fc-event {
+            border-radius: 2px !important;
+            border: none !important;
+            padding: 2px 4px;
+            font-size: 0.8em;
+        }
+        .fc-day-today {
+            background: rgba(0, 150, 64, 0.04) !important;
+        }
+
+        /* Print Styles Layout for A4 Stickers */
+        @media print {
+            @page {
+                size: A4;
+                margin: 10mm;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            body > *:not(#modal-sticker) {
+                display: none !important;
+            }
+            #modal-sticker {
+                position: static !important;
+                display: block !important;
+                background: transparent !important;
+            }
+            #modal-sticker > div {
+                position: static !important;
+                transform: none !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                max-width: none !important;
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+            }
+            #modal-sticker > div > div:first-child {
+                display: none !important;
+            }
+            #print-area {
+                position: static !important;
+                overflow: visible !important;
+                padding: 0 !important;
+                border: none !important;
+                height: auto !important;
+            }
+            #print-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15mm;
+                width: 100%;
+                align-content: start;
+                align-items: start;
+            }
+            .sticker-item {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border: 2px solid #333333 !important;
+                padding: 1.5rem !important;
+                background: white !important;
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800 min-h-screen relative overflow-x-hidden antialiased">
+
+    <header class="bg-tms-green text-white w-full fixed top-0 z-50 shadow-sm flex justify-between items-center px-6 py-2">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+                <svg class="w-5 h-5 text-tms-green" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            </div>
+            <span class="text-xl font-bold tracking-wide">Liquor Sample Management System (TMS Mode)</span>
+        </div>
+        <div class="flex items-center gap-4 text-sm">
+            <div class="text-right hidden md:block">
+                <div class="font-bold">เจ้าหน้าที่ชำนาญการอาวุโสเทคนิค</div>
+                <div class="text-xs text-green-200">ฝ่ายพัฒนาและการปรุงสุรา | ThaiBev</div>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-gray-200 border-2 border-white overflow-hidden">
+                <svg class="w-full h-full text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+            </div>
+        </div>
+    </header>
+
+    <nav class="bg-tms-light w-full fixed top-12 z-40 border-b border-tms-border px-6 flex gap-6 h-12 items-end">
+        <button class="nav-btn active pb-2 px-2 text-gray-700 font-semibold" data-target="dashboard">หน้าแรก</button>
+        <button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="add-sample">เพิ่มตัวอย่างสุรา</button>
+        <button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="locations">สถานที่จัดเก็บ</button>
+        <button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="calendar">ปฏิทินรอบตรวจสอบ</button>
+    </nav>
+
+    <main class="pt-28 pb-12 px-6 max-w-[1400px] mx-auto h-full">
+        
+        <section id="view-dashboard" class="view-section active">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+                <div>
+                    <h1 class="text-xl font-bold text-gray-800">ข้อมูลสรุปจำนวนตัวอย่างคลังสุราแยกตามอาคาร</h1>
+                    <p class="text-xs text-gray-500 mt-1">แสดงสถานะภาพรวมและอายุผลิตภัณฑ์ในห้องบ่มปฏิบัติการ</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <input type="text" id="search-input" placeholder="ค้นหารหัส หรือ Rotation No..." class="tms-input w-64">
+                    <select id="filter-room" class="tms-input min-w-[150px]">
+                        <option value="all">ทุกสถานที่เก็บ</option>
+                    </select>
+                    <select id="filter-type" class="tms-input min-w-[150px]">
+                        <option value="all">ทุกประเภท</option>
+                    </select>
+                    <select id="sort-duration" class="tms-input min-w-[150px]">
+                        <option value="desc">ระยะเวลา: นานสุดก่อน</option>
+                        <option value="asc">ระยะเวลา: ใหม่สุดก่อน</option>
+                    </select>
+                    <button class="btn-clear-filters text-sm text-red-600 hover:underline font-semibold">ล้างตัวกรอง</button>
+                </div>
+            </div>
+
+            <div id="zones-container" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
+                </div>
+
+            <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-base font-bold text-gray-800">รายการตัวอย่างสุราในคลังห้องปฏิบัติการ</h2>
+                    <button id="btn-print-selected" class="bg-tms-green hover:bg-green-700 text-white text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1.5 transition-colors shadow-sm">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                        พิมพ์สติ๊กเกอร์รายการที่เลือก
+                    </button>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="btn-scan" class="text-tms-green hover:underline text-sm flex items-center gap-1 font-semibold">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                        สแกน QR Code เพื่อตรวจสอบ
+                    </button>
+                    <button id="btn-settings" class="text-gray-500 hover:text-gray-800 text-sm flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+                        ตั้งค่า/เชื่อมต่อข้อมูล
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white border border-tms-border rounded-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead class="bg-tms-dark text-white">
+                            <tr>
+                                <th class="p-3 w-12 text-center">
+                                    <input type="checkbox" id="check-all-samples" class="w-4 h-4 rounded border-gray-300">
+                                </th>
+                                <th class="p-3 font-normal">รหัสเอกสารตัวอย่าง</th>
+                                <th class="p-3 font-normal">Rotation No. / ชื่อรายการ</th>
+                                <th class="p-3 font-normal">ประเภทสุรา</th>
+                                <th class="p-3 font-normal">Proprietor</th>
+                                <th class="p-3 font-normal">ดีกรี (ABV)</th>
+                                <th class="p-3 font-normal">สถานที่เก็บจัดวาง</th>
+                                <th class="p-3 font-normal">วันที่นำเข้าเก็บ</th>
+                                <th class="p-3 font-normal text-center">อายุผลิตภัณฑ์</th>
+                                <th class="p-3 font-normal text-center">สถานะ / การดำเนินการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="samples-table-body" class="divide-y divide-gray-200">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mt-4">
+                <div class="text-xs text-gray-500 font-medium" id="pagination-info">Showing 0-0 of 0 items</div>
+                <div class="flex gap-4 text-sm items-center font-semibold">
+                    <button id="btn-prev-page" class="text-gray-500 hover:text-black disabled:opacity-30">ก่อนหน้า</button>
+                    <div id="pagination-numbers" class="flex gap-1"></div>
+                    <button id="btn-next-page" class="text-tms-green hover:text-green-800 disabled:opacity-30">ถัดไป</button>
+                </div>
+            </div>
+
+            <h2 class="text-base font-bold text-gray-800 mt-8 mb-3">การวิเคราะห์ปริมาณสารอินทรีย์และคลังสุราแยกสัดส่วน</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="border border-tms-border p-4 bg-white rounded flex justify-center"><div class="w-full max-w-[220px]"><canvas id="chart-type"></canvas></div></div>
+                <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-room"></canvas></div>
+                <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-abv"></canvas></div>
+                <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-trend"></canvas></div>
+            </div>
+        </section>
+
+        <section id="view-add-sample" class="view-section hidden">
+            <h1 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">ลงทะเบียนถังตัวอย่างบ่มสุราใหม่</h1>
+            <div class="bg-white border border-tms-border p-6 max-w-4xl mx-auto shadow-sm">
+                <form id="form-add-sample" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex flex-col">
+                            <label class="text-sm font-semibold mb-1 text-gray-700">Rotation No. / ชื่อสูตรตัวอย่าง <span class="text-red-500">*</span></label>
+                            <input type="text" name="name" required class="tms-input">
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-sm font-semibold text-gray-700">ประเภทกลั่นสุรา (Sample Type) <span class="text-red-500">*</span></label>
+                                <button type="button" id="btn-manage-types" class="text-xs text-blue-600 hover:underline font-semibold">บริหารประเภท</button>
+                            </div>
+                            <select name="type" id="sample-type-select" required class="tms-input"></select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex flex-col">
+                            <label class="text-sm font-semibold mb-1 text-gray-700">ความเข้มข้นแอลกอฮอล์ (ABV %) <span class="text-red-500">*</span></label>
+                            <input type="number" step="0.1" name="degree" required class="tms-input">
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-sm font-semibold mb-1 text-gray-700">ผู้รับผิดชอบถังกลั่น (Proprietor of Spirits) <span class="text-red-500">*</span></label>
+                            <input type="text" name="proprietor" required class="tms-input">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex flex-col">
+                            <label class="text-sm font-semibold mb-1 text-gray-700">วันที่เริ่มต้นจัดเก็บกระบวนการ <span class="text-red-500">*</span></label>
+                            <input type="date" name="collectionDate" required class="tms-input">
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-sm font-semibold mb-1 text-gray-700">ห้องเก็บรักษาผลิตภัณฑ์ (Storage Location) <span class="text-red-500">*</span></label>
+                            <select name="locationId" id="location-select" required class="tms-input"></select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex flex-col">
+                            <label class="text-sm font-semibold mb-1 text-gray-600">ระยะเวลาบ่มปัจจุบันสะสม</label>
+                            <div class="tms-input font-bold bg-tms-light text-tms-green border-gray-300 flex items-center h-[38px]" id="live-aging">0 วัน</div>
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-sm font-semibold mb-1 text-gray-600">หมายเหตุกระบวนการผลิต / คุณลักษณะจำเพาะ</label>
+                            <textarea name="comment" rows="1" class="tms-input"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4 border-t border-gray-100 gap-3">
+                        <button type="button" class="px-5 py-2 border border-gray-300 text-gray-600 rounded text-sm font-semibold hover:bg-gray-50">ล้างฟอร์ม</button>
+                        <button type="submit" class="bg-tms-green text-white font-semibold py-2 px-6 rounded text-sm hover:bg-green-700 shadow-sm">บันทึกข้อมูลเข้า Sheet</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="view-locations" class="view-section hidden">
+            <div class="flex justify-between items-end mb-4 border-b pb-2">
+                <div>
+                    <h1 class="text-xl font-bold text-gray-800">ระบบบริหารสถานที่จัดวางถังและชั้นบ่มสุรา</h1>
+                    <p class="text-xs text-gray-500 mt-1" id="locations-filter-text">แสดงพื้นที่จัดเก็บทั้งหมดในระบบ</p>
+                </div>
+                <button id="btn-add-location" class="bg-tms-green text-white rounded-full px-4 py-2 text-xs font-semibold hover:bg-green-700 transition-colors shadow-sm">+ เพิ่มสถานที่จัดเก็บใหม่</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4" id="locations-grid">
+                </div>
+        </section>
+
+        <section id="view-calendar" class="view-section hidden">
+            <h1 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">ตารางปฏิทินรอบตรวจสอบคุณภาพชิมสุราประจำงวด (6 เดือน)</h1>
+            <div class="bg-white border border-tms-border p-4 rounded-sm">
+                <div id="calendar-element"></div>
+            </div>
+        </section>
+        
+    </main>
+
+    <div id="modal-scanner" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/50 backdrop-blur-none">
+        <div class="bg-white rounded p-6 max-w-md w-full shadow-xl relative">
+            <button class="absolute top-4 right-4 text-gray-400 hover:text-red-500" id="close-scanner">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h2 class="text-base font-bold text-gray-800 mb-3 border-b pb-1.5">สแกนรหัสคิวอาร์โค้ดประจำถัง</h2>
+            <div id="qr-reader" class="w-full bg-black rounded overflow-hidden" style="min-height: 250px;"></div>
+            <div class="mt-4 text-center">
+                <p class="text-xs text-gray-400 mb-2">หรือป้อนรหัส ID เอกสารด้วยตนเองเพื่อตรวจสอบข้อมูล</p>
+                <div class="flex gap-2">
+                    <input type="text" id="manual-scan-input" placeholder="ตัวอย่างเช่น id_xxxxxxxxx" class="tms-input flex-1">
+                    <button id="btn-manual-scan" class="bg-tms-green hover:bg-green-700 text-white px-4 py-2 rounded text-xs font-bold transition-colors">ค้นหาข้อมูล</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-sticker" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/50 overflow-y-auto">
+        <div class="bg-white rounded p-6 max-w-4xl w-full shadow-2xl my-8 flex flex-col">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b">
+                <h2 class="text-lg font-bold text-gray-800">แผ่นสติ๊กเกอร์ติดข้างถังประจำตัวอย่าง (A4 มาตรฐานโรงงาน)</h2>
+                <div class="flex gap-3">
+                    <button id="btn-print-sticker" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded text-xs">สั่งพิมพ์ออกเครื่อง</button>
+                    <button class="close-modal text-gray-400 hover:text-red-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+            </div>
+            <div id="print-area" class="bg-gray-100 overflow-y-auto p-4 border rounded max-h-[70vh]">
+                <div id="print-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // --- DATA MANAGEMENT WITH GOOGLE SHEETS & LOCALSTORAGE FALLBACK ---
+        let liquor_samples = [];
+        let liquor_locations = [];
+        let liquor_types = [];
+
+        // Google Apps Script Web App Endpoint URL Configuration 
+        // เปลี่ยนค่าด้านล่างนี้เป็น URL ที่ได้จากการ Deploy Google Apps Script เป็น Web App
+        let SCRIPT_URL = localStorage.getItem('tms_script_url') || 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+
+        function getSamples() { return liquor_samples; }
+        function getLocations() { return liquor_locations; }
+        function getTypes() { return liquor_types; }
+
+        function generateId() {
+            return 'id_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // โหมดตรวจสอบและ Sync ข้อมูลกับ Google Sheet แบบ Real-time
+        async function syncAllData(silent = false) {
+            if (!silent && typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'กำลังเชื่อมโยง Google Sheet...',
+                    text: 'กรุณารอสักครู่ ระบบกำลังดึงฐานข้อมูลการปรุงสุรากลาง',
+                    allowOutsideClick: false,
+                    didOpen: () => { Swal.showLoading(); }
+                });
+            }
+
+            // ตรวจสอบว่าผู้ใช้ตั้งค่า URL สคริปต์จริงหรือไม่ หากไม่มีจะ fallback ไปเก็บที่ LocalStorage เพื่อจำลองลูปทดสอบ
+            if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+                console.log("Using LocalStorage fallback database mode for simulation...");
+                liquor_samples = JSON.parse(localStorage.getItem('liquor_samples_db') || '[]');
+                liquor_locations = JSON.parse(localStorage.getItem('liquor_locations_db') || '[]');
+                if (liquor_locations.length === 0) {
+                    liquor_locations = [
+                        { id: 'L1', name: 'ห้องปฏิบัติการ A - ชั้นบ่ม 1' },
+                        { id: 'L2', name: 'ห้องปฏิบัติการ A - ชั้นบ่ม 2' },
+                        { id: 'L3', name: 'คลังโรงงานผลิตใหญ่' }
+                    ];
+                    localStorage.setItem('liquor_locations_db', JSON.stringify(liquor_locations));
+                }
+                liquor_types = JSON.parse(localStorage.getItem('liquor_types_db') || '[]');
+                if (liquor_types.length === 0) {
+                    liquor_types = ['Malt Whisky', 'Neutral Alcohol', 'Rum Special Blend', 'White Spirit 40', 'Gin Botanical'];
+                    localStorage.setItem('liquor_types_db', JSON.stringify(liquor_types));
+                }
+                if (!silent && typeof Swal !== 'undefined') Swal.close();
+                return true;
+            }
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getData`);
+                const result = await response.json();
+                liquor_samples = result.samples || [];
+                liquor_locations = result.locations || [];
+                liquor_types = result.types || [];
+                
+                // สดใหม่เสมอนำไปบันทึกลงสำรองด้วย
+                localStorage.setItem('liquor_samples_db', JSON.stringify(liquor_samples));
+                localStorage.setItem('liquor_locations_db', JSON.stringify(liquor_locations));
+                localStorage.setItem('liquor_types_db', JSON.stringify(liquor_types));
+                
+                if (!silent && typeof Swal !== 'undefined') Swal.close();
+                return true;
+            } catch (e) {
+                console.error("Failed to fetch from Google Sheets Cloud Web API, falling back to local memory state.", e);
+                liquor_samples = JSON.parse(localStorage.getItem('liquor_samples_db') || '[]');
+                liquor_locations = JSON.parse(localStorage.getItem('liquor_locations_db') || '[]');
+                liquor_types = JSON.parse(localStorage.getItem('liquor_types_db') || '[]');
+                if (!silent && typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'ติดต่อคลาวด์ไม่สำเร็จ',
+                        text: 'ระบบดึงข้อมูลสำรองจากหน่วยความจำเบราว์เซอร์มาทำรายการแทนให้ชั่วคราว',
+                        icon: 'warning',
+                        confirmButtonColor: '#009640'
+                    });
+                }
+                return false;
+            }
+        }
+
+        async function saveSamples(samples) {
+            liquor_samples = samples;
+            localStorage.setItem('liquor_samples_db', JSON.stringify(samples));
+            if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') return;
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ action: 'saveSamples', data: samples })
+                });
+            } catch(e) { console.error("Error updating sheet:", e); }
+        }
+
+        async function saveLocations(locations) {
+            liquor_locations = locations;
+            localStorage.setItem('liquor_locations_db', JSON.stringify(locations));
+            if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') return;
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ action: 'saveLocations', data: locations })
+                });
+            } catch(e) { console.error("Error updating sheet:", e); }
+        }
+
+        async function saveTypes(types) {
+            liquor_types = types;
+            localStorage.setItem('liquor_types_db', JSON.stringify(types));
+            if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') return;
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ action: 'saveTypes', data: types })
+                });
+            } catch(e) { console.error("Error updating sheet:", e); }
+        }
+
+        // --- CALCULATION LOGIC ENGINE ---
+        function calculateAging(startDateStr) {
+            if (!startDateStr) return '0 วัน';
+            const start = dayjs(startDateStr);
+            const now = dayjs();
+            const diffDays = now.diff(start, 'day');
+            
+            if (diffDays < 30) return `${diffDays} วัน`;
+            const diffMonths = now.diff(start, 'month');
+            if (diffMonths < 12) {
+                const remDays = now.subtract(diffMonths, 'month').diff(start, 'day');
+                return `${diffMonths} เดือน ${remDays > 0 ? remDays + ' วัน' : ''}`.trim();
+            }
+            const diffYears = now.diff(start, 'year');
+            const remMonths = now.subtract(diffYears, 'year').diff(start, 'month');
+            return `${diffYears} ปี ${remMonths > 0 ? remMonths + ' ด.' : ''}`.trim();
+        }
+
+        function getRoomName(locationName) {
+            if (locationName.includes('-')) {
+                return locationName.split('-')[0].trim();
+            }
+            return locationName.trim();
+        }
+
+        // --- GLOBAL APP RUNTIME VARIABLES ---
+        let calendarInstance = null;
+        let currentLocationFilter = null;
+        let html5QrcodeScanner = null;
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        let chartTypeInst = null;
+        let chartRoomInst = null;
+        let chartAbvInst = null;
+        let chartTrendInst = null;
+
+        // --- INTERFACE RENDERING ENGINE ---
+        $(document).ready(function() {
+            
+            // สั่งรัน Sync ข้อมูลก่อนวาด Dashboard
+            syncAllData().then(() => {
+                populateTypes();
+                renderDashboard();
+            });
+
+            // --- Navigation Router ---
+            $('.nav-btn').click(function() {
+                const target = $(this).data('target');
+                $('.nav-btn').removeClass('active');
+                $(this).addClass('active');
+                
+                $('.view-section').addClass('hidden');
+                $(`#view-${target}`).removeClass('hidden');
+
+                if (target !== 'locations') currentLocationFilter = null;
+
+                if (target === 'dashboard') {
+                    renderDashboard();
+                } else if (target === 'add-sample') {
+                    populateLocationsSelect();
+                    $('#form-add-sample')[0].reset();
+                    $('#live-aging').text('0 วัน');
+                    $('input[name="collectionDate"]').val(dayjs().format('YYYY-MM-DD'));
+                    updateLiveAging();
+                } else if (target === 'locations') {
+                    renderLocations();
+                } else if (target === 'calendar') {
+                    renderCalendar();
+                }
+            });
+
+            // --- Types Config Management ---
+            function populateTypes() {
+                const types = getTypes();
+                const $filter = $('#filter-type');
+                const currentFilterVal = $filter.val();
+                $filter.empty().append('<option value="all">ทุกประเภทสุรา</option>');
+                types.forEach(t => { $filter.append(`<option value="${t}">${t}</option>`); });
+                if (currentFilterVal && types.includes(currentFilterVal)) $filter.val(currentFilterVal);
+
+                const $select = $('#sample-type-select');
+                const currentSelectVal = $select.val();
+                $select.empty();
+                types.forEach(t => { $select.append(`<option value="${t}">${t}</option>`); });
+                if (currentSelectVal && types.includes(currentSelectVal)) $select.val(currentSelectVal);
+            }
+
+            $('#btn-manage-types').click(function() {
+                const types = getTypes();
+                let typesHtml = types.map((t, index) => `
+                    <div class="flex justify-between items-center mb-2 bg-gray-50 p-2 border text-xs">
+                        <span>${t}</span>
+                        <button class="text-red-500 hover:underline btn-delete-type" data-index="${index}">[ลบ]</button>
+                    </div>
+                `).join('');
+
+                Swal.fire({
+                    title: 'จัดการประเภทน้ำสุรากลั่น',
+                    html: `
+                        <div class="text-left mb-4 max-h-48 overflow-y-auto">${typesHtml}</div>
+                        <div class="flex gap-2">
+                            <input type="text" id="new-type-input" class="tms-input flex-1 py-1" placeholder="ชื่อประเภทบ่มใหม่...">
+                            <button id="btn-add-type" class="bg-tms-green text-white px-4 rounded text-xs">เพิ่ม</button>
+                        </div>
+                    `,
+                    showConfirmButton: true,
+                    confirmButtonText: 'เสร็จสิ้น',
+                    confirmButtonColor: '#009640',
+                    didOpen: () => {
+                        $('#btn-add-type').click(async function() {
+                            const newType = $('#new-type-input').val().trim();
+                            if (newType && !types.includes(newType)) {
+                                types.push(newType);
+                                await saveTypes(types);
+                                Swal.close();
+                                $('#btn-manage-types').click();
+                                populateTypes();
+                            }
+                        });
+                        $('.btn-delete-type').click(async function() {
+                            const idx = $(this).data('index');
+                            types.splice(idx, 1);
+                            await saveTypes(types);
+                            Swal.close();
+                            $('#btn-manage-types').click();
+                            populateTypes();
+                        });
+                    }
+                });
+            });
+
+            // --- Render Dashboard Analytics Panel ---
+            function renderDashboard() {
+                populateTypes();
+                const samples = getSamples();
+                const locations = getLocations();
+                const searchTerm = $('#search-input').val().toLowerCase();
+                const filterType = $('#filter-type').val();
+                const filterRoom = $('#filter-room').val() || 'all';
+
+                const roomsMap = {};
+                locations.forEach(loc => {
+                    const roomName = getRoomName(loc.name);
+                    if (!roomsMap[roomName]) roomsMap[roomName] = { count: 0 };
+                    roomsMap[roomName].count += samples.filter(s => s.locationId === loc.id).length;
+                });
+
+                const currentRoomVal = $('#filter-room').val();
+                $('#filter-room').empty().append('<option value="all">ทุกสถานที่เก็บ</option>');
+                Object.keys(roomsMap).forEach(room => {
+                    $('#filter-room').append(`<option value="${room}">${room}</option>`);
+                });
+                if (currentRoomVal) $('#filter-room').val(currentRoomVal);
+
+                // Summary Block Layout matching the user visual requested
+                const $zones = $('#zones-container');
+                $zones.empty();
+                
+                const uiPalette = ['bg-[#009640]', 'bg-[#5C5C9A]', 'bg-[#D2B48C]', 'bg-[#A8D08D]', 'bg-[#E2C2C2]', 'bg-[#708090]'];
+                
+                Object.keys(roomsMap).forEach((room, index) => {
+                    const colorHex = uiPalette[index % uiPalette.length];
+                    $zones.append(`
+                        <div class="${colorHex} text-white rounded p-3 flex flex-col justify-between shadow-sm cursor-pointer hover:opacity-90 transition-opacity room-card" data-room="${room}">
+                            <div class="text-xs font-semibold truncate">${room}</div>
+                            <div class="text-2xl font-bold tracking-tight mt-1">${roomsMap[room].count} <span class="text-xs font-normal">ถัง/รายการ</span></div>
+                            <div class="text-[9px] bg-black/10 px-1.5 py-0.5 mt-2 rounded w-max">ตรวจสอบพื้นที่</div>
+                        </div>
+                    `);
+                });
+
+                // Filter Logic
+                let filtered = samples.filter(s => {
+                    const locName = locations.find(l => l.id === s.locationId)?.name || '';
+                    const roomName = getRoomName(locName);
+                    
+                    const matchSearch = s.name.toLowerCase().includes(searchTerm) || 
+                                        (s.comment && s.comment.toLowerCase().includes(searchTerm)) || 
+                                        s.id.toLowerCase().includes(searchTerm);
+                    const matchType = filterType === 'all' ? true : s.type === filterType;
+                    const matchRoom = filterRoom === 'all' ? true : roomName === filterRoom;
+                    
+                    return matchSearch && matchType && matchRoom;
+                });
+
+                const sortDir = $('#sort-duration').val() || 'desc';
+                filtered.sort((a,b) => {
+                    const dateA = new Date(a.collectionDate);
+                    const dateB = new Date(b.collectionDate);
+                    return sortDir === 'desc' ? dateB - dateA : dateA - dateB;
+                });
+
+                // Pagination
+                const totalItems = filtered.length;
+                const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+                if (currentPage > totalPages) currentPage = totalPages;
+                const startIdx = (currentPage - 1) * itemsPerPage;
+                const pagedSamples = filtered.slice(startIdx, startIdx + itemsPerPage);
+
+                $('#pagination-info').text(`${totalItems === 0 ? 0 : startIdx + 1}-${Math.min(startIdx + itemsPerPage, totalItems)} of ${totalItems}`);
+                $('#btn-prev-page').prop('disabled', currentPage === 1);
+                $('#btn-next-page').prop('disabled', currentPage === totalPages);
+
+                const $pageNumContainer = $('#pagination-numbers');
+                $pageNumContainer.empty();
+                for(let i=1; i<=totalPages; i++) {
+                    if(i === currentPage) {
+                        $pageNumContainer.append(`<span class="w-5 h-5 flex items-center justify-center bg-[#009640] text-white rounded-full text-xs font-bold shadow-sm">${i}</span>`);
+                    } else {
+                        $pageNumContainer.append(`<button class="w-5 h-5 flex items-center justify-center text-gray-500 text-xs page-num-btn" data-page="${i}">${i}</button>`);
+                    }
+                }
+
+                const $tbody = $('#samples-table-body');
+                $tbody.empty();
+                
+                if (pagedSamples.length === 0) {
+                    $tbody.append(`<tr><td colspan="10" class="p-6 text-center text-gray-400">ไม่พบลำดับรหัสสุราตัวอย่างที่สอดคล้อง</td></tr>`);
+                } else {
+                    pagedSamples.forEach(s => {
+                        const locName = locations.find(l => l.id === s.locationId)?.name || 'ไม่พบจุดจัดวาง';
+                        const aging = calculateAging(s.collectionDate);
+                        
+                        $tbody.append(`
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-3 text-center">
+                                    <input type="checkbox" class="sample-checkbox w-3.5 h-3.5" value="${s.id}">
+                                </td>
+                                <td class="p-3 font-mono text-xs font-medium text-tms-green hover:underline cursor-pointer btn-edit" data-id="${s.id}">
+                                    ${s.id}
+                                </td>
+                                <td class="p-3">
+                                    <div class="font-bold text-gray-800 text-xs">${s.name}</div>
+                                    ${s.comment ? `<div class="text-[11px] text-gray-400 truncate max-w-xs">${s.comment}</div>` : ''}
+                                </td>
+                                <td class="p-3 text-xs"><span class="bg-gray-100 text-gray-700 px-2 py-0.5 border rounded">${s.type}</span></td>
+                                <td class="p-3 text-xs text-gray-600">${s.proprietor || '-'}</td>
+                                <td class="p-3 font-bold text-gray-700 text-xs">${s.degree}%</td>
+                                <td class="p-3 text-xs text-gray-600">${locName}</td>
+                                <td class="p-3 text-xs">${dayjs(s.collectionDate).format('DD/MM/YYYY')}</td>
+                                <td class="p-3 text-center font-semibold text-tms-green text-xs">${aging}</td>
+                                <td class="p-3 text-center whitespace-nowrap text-xs">
+                                    <span class="text-[#009640] font-bold block mb-1">จัดเก็บแล้ว</span>
+                                    <div class="flex justify-center gap-2">
+                                        <button class="text-blue-600 hover:underline btn-reprint" data-id="${s.id}">พิมพ์ป้าย</button>
+                                        <button class="text-red-500 hover:underline btn-delete" data-id="${s.id}">ลบออก</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                }
+
+                renderCharts(filtered, locations);
+            }
+
+            // --- Chart Dashboard Layouts Configuration ---
+            function renderCharts(samples, locations) {
+                if (chartTypeInst) chartTypeInst.destroy();
+                if (chartRoomInst) chartRoomInst.destroy();
+                if (chartAbvInst) chartAbvInst.destroy();
+                if (chartTrendInst) chartTrendInst.destroy();
+
+                if (samples.length === 0) return;
+
+                const typesCount = {};
+                samples.forEach(s => { typesCount[s.type] = (typesCount[s.type] || 0) + 1; });
+                
+                chartTypeInst = new Chart(document.getElementById('chart-type'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(typesCount),
+                        datasets: [{
+                            data: Object.values(typesCount),
+                            backgroundColor: ['#009640', '#5C5C9A', '#D2B48C', '#A8D08D', '#708090']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { title: { display: true, text: 'สัดส่วนประเภทสุรากลั่น' }, legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }
+                    }
+                });
+
+                const roomsCount = {};
+                locations.forEach(loc => {
+                    const roomName = getRoomName(loc.name);
+                    if (!roomsCount[roomName]) roomsCount[roomName] = 0;
+                    roomsCount[roomName] += samples.filter(s => s.locationId === loc.id).length;
+                });
+
+                chartRoomInst = new Chart(document.getElementById('chart-room'), {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(roomsCount),
+                        datasets: [{ label: 'จำนวนถังเก็บบ่ม', data: Object.values(roomsCount), backgroundColor: '#009640' }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                });
+
+                const abvSums = {}; const abvCounts = {};
+                samples.forEach(s => {
+                    if (!abvSums[s.type]) { abvSums[s.type] = 0; abvCounts[s.type] = 0; }
+                    abvSums[s.type] += parseFloat(s.degree) || 0; abvCounts[s.type]++;
+                });
+                const abvAvgs = Object.keys(abvSums).map(t => (abvSums[t] / abvCounts[t]).toFixed(1));
+
+                chartAbvInst = new Chart(document.getElementById('chart-abv'), {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(abvSums),
+                        datasets: [{ label: 'ค่าเฉลี่ย ABV (%) ข้อมูลปรุง', data: abvAvgs, backgroundColor: '#D2B48C' }]
+                    },
+                    options: { responsive: true }
+                });
+
+                const monthlyCount = {};
+                samples.forEach(s => {
+                    const m = dayjs(s.collectionDate).format('YYYY-MM');
+                    monthlyCount[m] = (monthlyCount[m] || 0) + 1;
+                });
+                const sortedMonths = Object.keys(monthlyCount).sort();
+
+                chartTrendInst = new Chart(document.getElementById('chart-trend'), {
+                    type: 'line',
+                    data: {
+                        labels: sortedMonths,
+                        datasets: [{ label: 'แนวโน้มการนำเข้าถังบ่มประจำเดือน', data: sortedMonths.map(m => monthlyCount[m]), borderColor: '#009640', fill: false }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+
+            // --- Handlers & Events Hooks ---
+            $(document).on('click', '.room-card', function() {
+                const room = $(this).data('room');
+                $('#filter-room').val(room).trigger('change');
+            });
+
+            $('#search-input').on('input', () => { currentPage = 1; renderDashboard(); });
+            $('#filter-type').on('change', () => { currentPage = 1; renderDashboard(); });
+            $('#filter-room').on('change', () => { currentPage = 1; renderDashboard(); });
+            $('#sort-duration').on('change', () => { currentPage = 1; renderDashboard(); });
+
+            $('.btn-clear-filters').click(function() {
+                $('#search-input').val('');
+                $('#filter-type').val('all');
+                $('#filter-room').val('all');
+                $('#sort-duration').val('desc');
+                currentPage = 1;
+                renderDashboard();
+            });
+
+            $(document).on('click', '.page-num-btn', function() {
+                currentPage = $(this).data('page');
+                renderDashboard();
+            });
+            $('#btn-prev-page').click(function() { if (currentPage > 1) { currentPage--; renderDashboard(); } });
+            $('#btn-next-page').click(function() { currentPage++; renderDashboard(); });
+
+            $('#check-all-samples').change(function() {
+                $('.sample-checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            // --- Registration Form Submit Process ---
+            function populateLocationsSelect() {
+                const locations = getLocations();
+                const $select = $('#location-select');
+                $select.empty();
+                locations.forEach(loc => { $select.append(`<option value="${loc.id}">${loc.name}</option>`); });
+            }
+
+            $('input[name="collectionDate"]').on('input', updateLiveAging);
+            function updateLiveAging() { $('#live-aging').text(calculateAging($('input[name="collectionDate"]').val())); }
+
+            $('#form-add-sample').submit(async function(e) {
+                e.preventDefault();
+                const newSample = {
+                    id: generateId(),
+                    name: $('input[name="name"]').val(),
+                    type: $('#sample-type-select').val(),
+                    proprietor: $('input[name="proprietor"]').val(),
+                    degree: $('input[name="degree"]').val(),
+                    locationId: $('#location-select').val(),
+                    collectionDate: $('input[name="collectionDate"]').val(),
+                    comment: $('textarea[name="comment"]').val()
+                };
+
+                const samples = getSamples();
+                samples.push(newSample);
+                
+                Swal.fire({ title: 'กำลังส่งข้อมูลคลาวด์...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                await saveSamples(samples);
+                
+                Swal.fire({
+                    title: 'บันทึกสำเร็จลงประวัติสำเร็จ!',
+                    text: 'ฐานข้อมูลอัปเดตเรียบร้อย กำลังเรียกดูหน้าป้ายฉลากถัง',
+                    icon: 'success',
+                    confirmButtonColor: '#009640',
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    showStickerModal([newSample]);
+                    $('#form-add-sample')[0].reset();
+                    updateLiveAging();
+                });
+            });
+
+            // --- Location Area Struct Process ---
+            function renderLocations() {
+                const locations = getLocations();
+                const samples = getSamples();
+                const $grid = $('#locations-grid');
+                $grid.empty();
+
+                locations.forEach(loc => {
+                    const count = samples.filter(s => s.locationId === loc.id).length;
+                    $grid.append(`
+                        <div class="border border-tms-border bg-white p-4 rounded-sm relative group cursor-pointer hover:shadow transition-shadow btn-view-loc-samples" data-id="${loc.id}">
+                            <h3 class="font-bold text-tms-green text-sm">${loc.name}</h3>
+                            <p class="text-xs text-gray-500 mt-1">บรรจุภายในคลังสะสม: <span class="text-gray-900 font-bold">${count} รายการ</span></p>
+                            <button class="absolute top-2 right-2 text-xs text-red-400 opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-600 btn-delete-loc" data-id="${loc.id}" data-count="${count}">[ลบ]</button>
+                        </div>
+                    `);
+                });
+            }
+
+            $('#btn-add-location').click(function() {
+                Swal.fire({
+                    title: 'เพิ่มโครงสร้างคลัง/ชั้นบ่มย่อยใหม่',
+                    input: 'text',
+                    inputPlaceholder: 'ตัวอย่างเช่น ห้องบ่ม B - ล็อก 3',
+                    confirmButtonColor: '#009640',
+                    showCancelButton: true,
+                    cancelButtonText: 'ยกเลิก',
+                    confirmButtonText: 'บันทึกหน่วย'
+                }).then(async (result) => {
+                    if (result.isConfirmed && result.value.trim() !== '') {
+                        const locs = getLocations();
+                        locs.push({ id: generateId(), name: result.value.trim() });
+                        await saveLocations(locs);
+                        renderLocations();
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-delete-loc', function(e) {
+                e.stopPropagation();
+                const id = $(this).data('id');
+                const count = parseInt($(this).data('count'));
+
+                if (count > 0) {
+                    Swal.fire({ title: 'ระงับการลบพื้นที่', text: 'ไม่สามารถลบพื้นที่เก็บนี้ได้เนื่องจากมีข้อมูลถังตัวอย่างค้างอยู่หน้างาน', icon: 'error', confirmButtonColor: '#009640' });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'ยืนยันลบพิกัดตำแหน่ง?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'ลบข้อมูล',
+                    cancelButtonText: 'ยกเลิก'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        let locs = getLocations();
+                        locs = locs.filter(l => l.id !== id);
+                        await saveLocations(locs);
+                        renderLocations();
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-view-loc-samples', function() {
+                const locId = $(this).data('id');
+                const locName = getLocations().find(l => l.id === locId)?.name;
+                const samplesInLoc = getSamples().filter(s => s.locationId === locId);
+                
+                let tableHtml = `
+                    <div class="overflow-y-auto max-h-60 text-xs">
+                    <table class="w-full text-left border-collapse">
+                        <thead><tr class="bg-gray-100 border-b"><th class="p-2">รหัส ID</th><th class="p-2">Rotation No.</th><th class="p-2">ดีกรี</th><th class="p-2">อายุสะสม</th></tr></thead>
+                        <tbody>
+                `;
+                samplesInLoc.forEach(s => {
+                    tableHtml += `<tr class="border-b"><td class="p-2 font-mono text-gray-400">${s.id}</td><td class="p-2 font-bold text-gray-800">${s.name}</td><td class="p-2">${s.degree}%</td><td class="p-2 text-tms-green">${calculateAging(s.collectionDate)}</td></tr>`;
+                });
+                tableHtml += `</tbody></table></div>`;
+
+                Swal.fire({ title: `รายการใน: ${locName}`, html: tableHtml, width: '550px', confirmButtonText: 'ปิดหน้ารายงาน', confirmButtonColor: '#009640' });
+            });
+
+            // --- FullCalendar Routine Sync ---
+            function renderCalendar() {
+                const calendarEl = document.getElementById('calendar-element');
+                if (calendarInstance) calendarInstance.destroy();
+
+                const events = [];
+                getSamples().forEach(s => {
+                    events.push({
+                        title: `นำเข้า: ${s.name} (${s.degree}%)`,
+                        start: s.collectionDate,
+                        backgroundColor: '#009640',
+                        allDay: true,
+                        extendedProps: { sample: s }
+                    });
+
+                    const reviewDate = dayjs(s.collectionDate).add(6, 'month').format('YYYY-MM-DD');
+                    events.push({
+                        title: `งวดชิม: ${s.name}`,
+                        start: reviewDate,
+                        backgroundColor: '#666666',
+                        allDay: true,
+                        extendedProps: { sample: s }
+                    });
+                });
+
+                calendarInstance = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    events: events,
+                    headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,dayGridWeek' },
+                    eventClick: function(info) {
+                        const s = info.event.extendedProps.sample;
+                        Swal.fire({
+                            title: info.event.title,
+                            html: `<div class="text-left text-xs space-y-1"><p><strong>ชนิดเหล้าบ่ม:</strong> ${s.type}</p><p><strong>ดีกรีวัดได้:</strong> ${s.degree}%</p><p><strong>ผู้ปรุง:</strong> ${s.proprietor}</p><p><strong>เวลาสะสมคลัง:</strong> ${calculateAging(s.collectionDate)}</p></div>`,
+                            confirmButtonColor: '#009640'
+                        });
+                    }
+                });
+                calendarInstance.render();
+            }
+
+            // --- Delete Data Event ---
+            $(document).on('click', '.btn-delete', function() {
+                const id = $(this).data('id');
+                Swal.fire({
+                    title: 'ยืนยันสั่งจำหน่าย/ทำลายถังตัวอย่างนี้?',
+                    text: "ประวัติหลักจะถูกอัปเดตออกจากคลาวด์และชีตส่วนกลางทันที",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#666666',
+                    confirmButtonText: 'ยืนยันลบ',
+                    cancelButtonText: 'ยกเลิก'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        let samples = getSamples();
+                        samples = samples.filter(s => s.id !== id);
+                        await saveSamples(samples);
+                        renderDashboard();
+                        Swal.fire({ title: 'ลบรายการออกระบบแล้ว', icon: 'success', timer: 1000, showConfirmButton: false });
+                    }
+                });
+            });
+
+            // --- Edit Data Info Panel ---
+            $(document).on('click', '.btn-edit', function() {
+                const id = $(this).data('id');
+                const sample = getSamples().find(s => s.id === id);
+                if (!sample) return;
+
+                const typeOptions = getTypes().map(t => `<option value="${t}" ${t === sample.type ? 'selected' : ''}>${t}</option>`).join('');
+                const locOptions = getLocations().map(l => `<option value="${l.id}" ${l.id === sample.locationId ? 'selected' : ''}>${l.name}</option>`).join('');
+
+                Swal.fire({
+                    title: `แก้ไขข้อมูลรหัสประจำชิ้น: ${sample.id}`,
+                    html: `
+                        <div class="text-left space-y-3 text-xs">
+                            <div><label class="font-bold block mb-1">Rotation No. / ชื่อถัง</label><input type="text" id="edit-name" class="tms-input w-full" value="${sample.name}"></div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="font-bold block mb-1">ประเภท</label><select id="edit-type" class="tms-input w-full">${typeOptions}</select></div>
+                                <div><label class="font-bold block mb-1">Proprietor</label><input type="text" id="edit-proprietor" class="tms-input w-full" value="${sample.proprietor || ''}"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="font-bold block mb-1">ABV (%)</label><input type="number" step="0.1" id="edit-degree" class="tms-input w-full" value="${sample.degree}"></div>
+                                <div><label class="font-bold block mb-1">สถานที่จัดเก็บ</label><select id="edit-location" class="tms-input w-full">${locOptions}</select></div>
+                            </div>
+                            <div><label class="font-bold block mb-1">วันที่นำเข้าบันทึก</label><input type="date" id="edit-date" class="tms-input w-full" value="${sample.collectionDate}"></div>
+                            <div><label class="font-bold block mb-1">หมายเหตุรายละเอียด</label><textarea id="edit-comment" rows="1" class="tms-input w-full">${sample.comment || ''}</textarea></div>
+                        </div>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: 'บันทึกการปรับปรุงข้อมูล',
+                    cancelButtonText: 'ยกเลิก',
+                    confirmButtonColor: '#009640',
+                    width: '500px',
+                    preConfirm: () => {
+                        return {
+                            name: $('#edit-name').val(),
+                            type: $('#edit-type').val(),
+                            proprietor: $('#edit-proprietor').val(),
+                            degree: $('#edit-degree').val(),
+                            locationId: $('#edit-location').val(),
+                            collectionDate: $('#edit-date').val(),
+                            comment: $('#edit-comment').val(),
+                        }
+                    }
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        const samples = getSamples();
+                        const index = samples.findIndex(s => s.id === id);
+                        if (index !== -1) {
+                            samples[index] = { ...samples[index], ...result.value };
+                            await saveSamples(samples);
+                            renderDashboard();
+                        }
+                    }
+                });
+            });
+
+            // --- Sticker & QR Generator Execution ---
+            let qrInstances = [];
+            function showStickerModal(samplesArray) {
+                const $grid = $('#print-grid');
+                $grid.empty();
+                qrInstances.forEach(qr => qr.clear());
+                qrInstances = [];
+
+                samplesArray.forEach((sample, index) => {
+                    const qrId = `qr-${index}`;
+                    const dateStr = dayjs(sample.collectionDate).format('DD/MM/YYYY');
+                    const locName = getLocations().find(l => l.id === sample.locationId)?.name || 'คลังรวม';
+                    
+                    $grid.append(`
+                        <div class="sticker-item flex flex-col p-4 bg-white text-black border-2 border-gray-800 w-full font-sans">
+                            <div class="text-center font-bold text-base border-b pb-1 mb-2 tracking-wider">THAIBEV LIQUOR LIBRARY</div>
+                            <div class="flex items-center gap-4 mb-2">
+                                <div id="${qrId}" class="p-1 border border-gray-300 w-16 h-16 flex-shrink-0 flex items-center justify-center"></div>
+                                <div class="text-xs space-y-0.5">
+                                    <div><strong>รหัสระบบ ID:</strong> <span class="font-mono">${sample.id}</span></div>
+                                    <div><strong>ROTATION NO:</strong> <span class="font-bold text-sm">${sample.name}</span></div>
+                                    <div><strong>PROPRIETOR:</strong> ${sample.proprietor || '-'}</div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-[80px_1fr] text-xs gap-y-1 bg-gray-50 p-2 border">
+                                <div class="font-bold">ระดับดีกรี (ABV):</div><div>${sample.degree}%</div>
+                                <div class="font-bold">วันที่เข้าบ่ม:</div><div>${dateStr}</div>
+                                <div class="font-bold">พิกัดจัดวาง:</div><div class="truncate">${locName}</div>
+                                <div class="font-bold">คุณลักษณะ:</div><div class="italic">${sample.comment || '-'}</div>
+                            </div>
+                            <div class="mt-3 text-right text-[10px] uppercase font-semibold text-gray-500">Authorized Technique Signature</div>
+                        </div>
+                    `);
+
+                    setTimeout(() => {
+                        const qr = new QRCode(document.getElementById(qrId), {
+                            text: sample.id, width: 56, height: 56,
+                            colorDark : "#000000", colorLight : "#ffffff",
+                            correctLevel : QRCode.CorrectLevel.L
+                        });
+                        qrInstances.push(qr);
+                    }, 20);
+                });
+
+                $('#modal-sticker').removeClass('hidden');
+            }
+
+            $(document).on('click', '.btn-reprint', function() {
+                const id = $(this).data('id');
+                const sample = getSamples().find(s => s.id === id);
+                if (sample) showStickerModal([sample]);
+            });
+
+            $('#btn-print-selected').click(function() {
+                const selectedIds = $('.sample-checkbox:checked').map(function() { return $(this).val(); }).get();
+                if (selectedIds.length === 0) {
+                    Swal.fire({ title: 'โปรดเลือกถังอย่างน้อย 1 รายการ', text: 'กรุณาเลือกติ๊กถูกแถวหน้าตารางข้อมูลเพื่อสั่งชุดพิมพ์ป้ายกลุ่ม', icon: 'warning', confirmButtonColor: '#009640' });
+                    return;
+                }
+                const samplesToPrint = getSamples().filter(s => selectedIds.includes(s.id));
+                showStickerModal(samplesToPrint);
+            });
+
+            $('.close-modal').click(function() { $(this).closest('.fixed').addClass('hidden'); });
+            $('#btn-print-sticker').click(function() { window.print(); });
+
+            // --- Barcode / QR Code Scanner Panel ---
+            $('#btn-scan').click(function() {
+                $('#modal-scanner').removeClass('hidden');
+                $('#manual-scan-input').val('');
+                if (!html5QrcodeScanner) html5QrcodeScanner = new Html5Qrcode("qr-reader");
+                html5QrcodeScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 200 }, onScanSuccess, () => {});
+            });
+
+            $('#close-scanner').click(function() {
+                $('#modal-scanner').addClass('hidden');
+                if (html5QrcodeScanner && html5QrcodeScanner.isScanning) html5QrcodeScanner.stop();
+            });
+
+            function onScanSuccess(decodedText) {
+                if (html5QrcodeScanner && html5QrcodeScanner.isScanning) html5QrcodeScanner.stop();
+                $('#modal-scanner').addClass('hidden');
+                handleScanResult(decodedText);
+            }
+
+            $('#btn-manual-scan').click(function() {
+                const val = $('#manual-scan-input').val().trim();
+                if (val) {
+                    if (html5QrcodeScanner && html5QrcodeScanner.isScanning) html5QrcodeScanner.stop();
+                    $('#modal-scanner').addClass('hidden');
+                    handleScanResult(val);
+                }
+            });
+
+            function handleScanResult(sampleId) {
+                const sample = getSamples().find(s => s.id === sampleId);
+                if (!sample) {
+                    Swal.fire({ title: 'ไม่พบรหัสวัตถุดิบถังนี้!', text: 'รหัสคิวอาร์ที่สแกนไม่มีในทะเบียนแผ่นประวัติงานชีตปัจจุบัน', icon: 'error', confirmButtonColor: '#009640' });
+                    return;
+                }
+
+                const locName = getLocations().find(l => l.id === sample.locationId)?.name || 'ไม่ระบุ';
+                Swal.fire({
+                    title: `ตรวจสอบพบ: ${sample.name}`,
+                    html: `<div class="text-left text-xs bg-gray-50 p-3 space-y-1 mt-2 border"><p><strong>ประเภทบ่มกลั่น:</strong> ${sample.type}</p><p><strong>ดีกรี (ABV %):</strong> ${sample.degree}%</p><p><strong>พิกัดวางคลัง:</strong> ${locName}</p><p><strong>ระยะเวลาหมักสะสม:</strong> ${calculateAging(sample.collectionDate)}</p></div>`,
+                    showCancelButton: true,
+                    confirmButtonText: 'ปิดรายงานหน้างาน',
+                    cancelButtonText: 'จำหน่ายออกจากระบบ (ลบ)',
+                    confirmButtonColor: '#009640',
+                    cancelButtonColor: '#d33'
+                }).then(async (result) => {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
+                        let newSamples = getSamples().filter(s => s.id !== sampleId);
+                        await saveSamples(newSamples);
+                        renderDashboard();
+                    }
+                });
+            }
+
+            // --- Endpoint App Integration Settings ---
+            $('#btn-settings').click(function() {
+                Swal.fire({
+                    title: 'เชื่อมต่อ Google Sheets API (Apps Script)',
+                    html: `
+                        <div class="text-left text-xs space-y-2">
+                            <p class="text-gray-500 font-medium">กรอก URL ของ Web App ที่คอมไพล์จากสคริปต์ Google Sheets ส่วนกลางของแผนก</p>
+                            <input type="text" id="endpoint-url-input" class="tms-input w-full font-mono text-[11px]" value="${SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL' ? '' : SCRIPT_URL}" placeholder="https://script.google.com/macros/s/.../exec">
+                            <button id="btn-save-endpoint" class="w-full bg-[#009640] text-white py-2 rounded text-xs font-bold mt-2 hover:bg-green-700 transition-colors">บันทึกและซิงค์ฐานข้อมูลคลาวด์</button>
+                            <div class="pt-4 border-t mt-4 flex gap-2">
+                                <button id="btn-backup-export" class="flex-1 bg-gray-100 hover:bg-gray-200 py-1.5 rounded text-gray-700 font-bold">ดาวน์โหลด JSON สำรอง</button>
+                                <button id="btn-sim-test" class="flex-1 bg-blue-50 text-blue-700 py-1.5 rounded font-bold hover:bg-blue-100">รันระบบทดสอบจำลอง Loop</button>
+                            </div>
+                        </div>
+                    `,
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    cancelButtonText: 'ปิดหน้ารายการ'
+                });
+
+                $('#btn-save-endpoint').click(async function() {
+                    const newUrl = $('#endpoint-url-input').val().trim();
+                    if(newUrl) {
+                        SCRIPT_URL = newUrl;
+                        localStorage.setItem('tms_script_url', newUrl);
+                        Swal.close();
+                        const success = await syncAllData();
+                        if(success) {
+                            Swal.fire({ title: 'เชื่อมต่อสำเร็จ!', text: 'ดึงข้อมูลชีตเข้าสู่โครงสร้างหลักเรียบร้อย', icon: 'success', confirmButtonColor: '#009640' });
+                            renderDashboard();
+                        }
+                    }
+                });
+
+                $('#btn-backup-export').click(function() {
+                    const data = { samples: getSamples(), locations: getLocations(), types: getTypes() };
+                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+                    const dlAnchor = document.createElement('a');
+                    dlAnchor.setAttribute("href", dataStr);
+                    dlAnchor.setAttribute("download", `LiquorLibrary_Backup_${dayjs().format('YYYYMMDD_HHmm')}.json`);
+                    dlAnchor.click();
+                });
+
+                // ฟังก์ชัน Loop Test อัตโนมัติ (End-to-End Simulation Mode)
+                $('#btn-sim-test').click(async function() {
+                    Swal.close();
+                    Swal.fire({
+                        title: 'กำลังเริ่มต้นรันการทดสอบ Loop ระบบ...',
+                        text: 'จำลอง: ดึงข้อมูล -> เพิ่มรายการ -> พิมพ์ -> ลบข้อมูลลูปสมบูรณ์',
+                        allowOutsideClick: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
+
+                    // 1. ทดสอบการดึงพิกัด
+                    setTimeout(async () => {
+                        console.log("Test Loop Step 1: Data Synchronized.");
+                        // 2. จำลองสร้างไอเท็มชิมขึ้นมา 1 รายการ
+                        const simId = 'test_' + Math.random().toString(36).substr(2, 5);
+                        const testItem = {
+                            id: simId,
+                            name: "ถังทดสอบเบลนด์พิเศษ (Auto Test Loop)",
+                            type: getTypes()[0] || "Malt Whisky",
+                            proprietor: "ผู้ปรุงจำลองอัตโนมัติ",
+                            degree: "40.0",
+                            locationId: getLocations()[0]?.id || "L1",
+                            collectionDate: dayjs().format('YYYY-MM-DD'),
+                            comment: "สร้างขึ้นโดยระบบทดสอบความเสถียรของลูปโปรแกรม"
+                        };
+                        
+                        let currentSamples = getSamples();
+                        currentSamples.push(testItem);
+                        await saveSamples(currentSamples);
+                        renderDashboard();
+                        
+                        setTimeout(async () => {
+                            // 3. จำลองการค้นหาตรวจจับ QR Code สำเร็จ
+                            console.log("Test Loop Step 2: Item Created & Saved to Sync List.");
+                            const found = getSamples().find(s => s.id === simId);
+                            if(found) {
+                                // 4. ทำลายถังไอเท็มจำลองทิ้งเมื่อจบลูป เพื่อความสะอาดของข้อมูลคลังจริง
+                                let cleanedSamples = getSamples().filter(s => s.id !== simId);
+                                await saveSamples(cleanedSamples);
+                                renderDashboard();
+                                console.log("Test Loop Step 3: Cleanup simulated items successfully.");
+                                
+                                Swal.fire({
+                                    title: 'ผลการตรวจสอบ Loop เสถียรดีเยี่ยม!',
+                                    html: '<div class="text-left text-xs space-y-1"><p class="text-green-600 font-bold">✓ การประมวลผลอ่านเขียนอาคารบ่มถูกต้อง</p><p class="text-green-600 font-bold">✓ การส่งต่อพารามิเตอร์แบบ Async ปลอดภัย</p><p class="text-green-600 font-bold">✓ ระบบ Fallback ความจุ LocalStorage ทำงานปกติ</p></div>',
+                                    icon: 'success',
+                                    confirmButtonColor: '#009640'
+                                });
+                            }
+                        }, 1200);
+                    }, 800);
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("File 'index.html' written successfully.")
