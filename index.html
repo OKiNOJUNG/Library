@@ -196,7 +196,7 @@ html_content = """<!DOCTYPE html>
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
                 <div>
                     <h1 class="text-xl font-bold text-gray-800">ข้อมูลสรุปจำนวนตัวอย่างคลังสุราแยกตามอาคาร</h1>
-                    <p class="text-xs text-gray-500 mt-1">แสดงสถานะภาพรวมและอายุผลิตภัณฑ์ในห้องบ่มปฏิบัติการ</p>
+                    <p class="text-xs text-gray-500 mt-1">แสดงสถานะภาพรวมและอายุตัวอย่างในห้องบ่มปฏิบัติการ</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-3">
                     <input type="text" id="search-input" placeholder="ค้นหารหัส หรือ Rotation No..." class="tms-input w-64">
@@ -252,7 +252,7 @@ html_content = """<!DOCTYPE html>
                                 <th class="p-3 font-normal">ดีกรี (ABV)</th>
                                 <th class="p-3 font-normal">สถานที่เก็บจัดวาง</th>
                                 <th class="p-3 font-normal">วันที่นำเข้าเก็บ</th>
-                                <th class="p-3 font-normal text-center">อายุผลิตภัณฑ์</th>
+                                <th class="p-3 font-normal text-center">อายุตัวอย่าง</th>
                                 <th class="p-3 font-normal text-center">สถานะ / การดำเนินการ</th>
                             </tr>
                         </thead>
@@ -687,7 +687,7 @@ html_content = """<!DOCTYPE html>
                     $zones.append(`
                         <div class="${colorHex} text-white rounded p-3 flex flex-col justify-between shadow-sm cursor-pointer hover:opacity-90 transition-opacity room-card" data-room="${room}">
                             <div class="text-xs font-semibold truncate">${room}</div>
-                            <div class="text-2xl font-bold tracking-tight mt-1">${roomsMap[room].count} <span class="text-xs font-normal">ถัง/รายการ</span></div>
+                            <div class="text-2xl font-bold tracking-tight mt-1">${roomsMap[room].count} <span class="text-xs font-normal">ขวด/รายการ</span></div>
                             <div class="text-[9px] bg-black/10 px-1.5 py-0.5 mt-2 rounded w-max">ตรวจสอบพื้นที่</div>
                         </div>
                     `);
