@@ -1254,10 +1254,10 @@ html_content = """<!DOCTYPE html>
             // --- Endpoint App Integration Settings ---
             $('#btn-settings').click(function() {
                 Swal.fire({
-                    title: 'เชื่อมต่อ Google Sheets API (Apps Script)',
+                    title: 'เชื่อมต่อ API (Apps Script)',
                     html: `
                         <div class="text-left text-xs space-y-2">
-                            <p class="text-gray-500 font-medium">กรอก URL ของ Web App ที่คอมไพล์จากสคริปต์ Google Sheets ส่วนกลางของแผนก</p>
+                            <p class="text-gray-500 font-medium">กรอก URL Api Database</p>
                             <input type="text" id="endpoint-url-input" class="tms-input w-full font-mono text-[11px]" value="${SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL' ? '' : SCRIPT_URL}" placeholder="https://script.google.com/macros/s/.../exec">
                             <button id="btn-save-endpoint" class="w-full bg-[#009640] text-white py-2 rounded text-xs font-bold mt-2 hover:bg-green-700 transition-colors">บันทึกและซิงค์ฐานข้อมูลคลาวด์</button>
                             <div class="pt-4 border-t mt-4 flex gap-2">
