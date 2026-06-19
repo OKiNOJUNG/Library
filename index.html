@@ -281,17 +281,17 @@ html_content = """<!DOCTYPE html>
         </section>
 
         <section id="view-add-sample" class="view-section hidden">
-            <h1 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">ลงทะเบียนถังตัวอย่างบ่มสุราใหม่</h1>
+            <h1 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">ลงทะเบียนตัวอย่างสุราใหม่</h1>
             <div class="bg-white border border-tms-border p-6 max-w-4xl mx-auto shadow-sm">
                 <form id="form-add-sample" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="flex flex-col">
-                            <label class="text-sm font-semibold mb-1 text-gray-700">Rotation No. / ชื่อสูตรตัวอย่าง <span class="text-red-500">*</span></label>
+                            <label class="text-sm font-semibold mb-1 text-gray-700">Rotation No. / ชื่อตัวอย่าง <span class="text-red-500">*</span></label>
                             <input type="text" name="name" required class="tms-input">
                         </div>
                         <div class="flex flex-col">
                             <div class="flex justify-between items-center mb-1">
-                                <label class="text-sm font-semibold text-gray-700">ประเภทกลั่นสุรา (Sample Type) <span class="text-red-500">*</span></label>
+                                <label class="text-sm font-semibold text-gray-700">ประเภทตัวอย่าง (Sample Type)<span class="text-red-500">*</span></label>
                                 <button type="button" id="btn-manage-types" class="text-xs text-blue-600 hover:underline font-semibold">บริหารประเภท</button>
                             </div>
                             <select name="type" id="sample-type-select" required class="tms-input"></select>
@@ -304,7 +304,7 @@ html_content = """<!DOCTYPE html>
                             <input type="number" step="0.1" name="degree" required class="tms-input">
                         </div>
                         <div class="flex flex-col">
-                            <label class="text-sm font-semibold mb-1 text-gray-700">ผู้รับผิดชอบถังกลั่น (Proprietor of Spirits) <span class="text-red-500">*</span></label>
+                            <label class="text-sm font-semibold mb-1 text-gray-700">ผู้จัดเก็บตัวอย่าง (Proprietor of Spirits) <span class="text-red-500">*</span></label>
                             <input type="text" name="proprietor" required class="tms-input">
                         </div>
                     </div>
@@ -322,7 +322,7 @@ html_content = """<!DOCTYPE html>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="flex flex-col">
-                            <label class="text-sm font-semibold mb-1 text-gray-600">ระยะเวลาบ่มปัจจุบันสะสม</label>
+                            <label class="text-sm font-semibold mb-1 text-gray-600">ระยะเวลาที่ตัวอย่างถูกจัดเก็บ</label>
                             <div class="tms-input font-bold bg-tms-light text-tms-green border-gray-300 flex items-center h-[38px]" id="live-aging">0 วัน</div>
                         </div>
                         <div class="flex flex-col">
@@ -352,7 +352,7 @@ html_content = """<!DOCTYPE html>
         </section>
 
         <section id="view-calendar" class="view-section hidden">
-            <h1 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">ตารางปฏิทินรอบตรวจสอบคุณภาพชิมสุราประจำงวด (6 เดือน)</h1>
+            <h1 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">ตารางปฏิทินการจัดเก็บตัวอย่าง</h1>
             <div class="bg-white border border-tms-border p-4 rounded-sm">
                 <div id="calendar-element"></div>
             </div>
@@ -1352,9 +1352,3 @@ html_content = """<!DOCTYPE html>
     </script>
 </body>
 </html>
-"""
-
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-
-print("File 'index.html' written successfully.")
