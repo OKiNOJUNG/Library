@@ -422,8 +422,8 @@ html_content = """<!DOCTYPE html>
         async function syncAllData(silent = false) {
             if (!silent && typeof Swal !== 'undefined') {
                 Swal.fire({
-                    title: 'กำลังเชื่อมโยง Google Sheet...',
-                    text: 'กรุณารอสักครู่ ระบบกำลังดึงฐานข้อมูลการปรุงสุรากลาง',
+                    title: 'กำลังเชื่อมโยงฐานข้อมูล',
+                    text: 'กรุณารอสักครู่',
                     allowOutsideClick: false,
                     didOpen: () => { Swal.showLoading(); }
                 });
