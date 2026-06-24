@@ -195,8 +195,8 @@ html_content = """<!DOCTYPE html>
         <section id="view-dashboard" class="view-section active">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
                 <div>
-                    <h1 class="text-xl font-bold text-gray-800">ข้อมูลสรุปจำนวนตัวอย่างคลังสุราแยกตามอาคาร</h1>
-                    <p class="text-xs text-gray-500 mt-1">แสดงสถานะภาพรวมและอายุตัวอย่างในห้องบ่มปฏิบัติการ</p>
+                    <h1 class="text-xl font-bold text-gray-800">ข้อมูลสรุปจำนวนตัวอย่างคลังสุราแยกตามที่จัดเก็บ</h1>
+                    <p class="text-xs text-gray-500 mt-1">แสดงสถานะภาพรวมและอายุตัวอย่างในห้องจัดเก็บ</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-3">
                     <input type="text" id="search-input" placeholder="ค้นหารหัส หรือ Rotation No..." class="tms-input w-64">
@@ -248,7 +248,7 @@ html_content = """<!DOCTYPE html>
                                 <th class="p-3 font-normal">รหัสเอกสารตัวอย่าง</th>
                                 <th class="p-3 font-normal">Rotation No. / ชื่อรายการ</th>
                                 <th class="p-3 font-normal">ประเภทสุรา</th>
-                                <th class="p-3 font-normal">Proprietor</th>
+                                <th class="p-3 font-normal">ผู้จัดเก็บ</th>
                                 <th class="p-3 font-normal">ดีกรี (ABV)</th>
                                 <th class="p-3 font-normal">สถานที่เก็บจัดวาง</th>
                                 <th class="p-3 font-normal">วันที่นำเข้าเก็บ</th>
@@ -311,7 +311,7 @@ html_content = """<!DOCTYPE html>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="flex flex-col">
-                            <label class="text-sm font-semibold mb-1 text-gray-700">วันที่เริ่มต้นจัดเก็บกระบวนการ <span class="text-red-500">*</span></label>
+                            <label class="text-sm font-semibold mb-1 text-gray-700">วันที่เริ่มต้นจัดเก็บตัวอย่าง <span class="text-red-500">*</span></label>
                             <input type="date" name="collectionDate" required class="tms-input">
                         </div>
                         <div class="flex flex-col">
@@ -956,7 +956,7 @@ html_content = """<!DOCTYPE html>
                     confirmButtonColor: '#009640',
                     showCancelButton: true,
                     cancelButtonText: 'ยกเลิก',
-                    confirmButtonText: 'บันทึกหน่วย'
+                    confirmButtonText: 'บันทึก'
                 }).then(async (result) => {
                     if (result.isConfirmed && result.value.trim() !== '') {
                         const locs = getLocations();
