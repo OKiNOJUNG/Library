@@ -216,7 +216,13 @@ html_content = """<!DOCTYPE html>
 
             <div id="zones-container" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
                 </div>
-
+<h2 class="text-base font-bold text-gray-800 mt-2 mb-3">การวิเคราะห์ปริมาณสารอินทรีย์และคลังสุราแยกสัดส่วน</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="border border-tms-border p-4 bg-white rounded flex justify-center"><div class="w-full max-w-[220px]"><canvas id="chart-type"></canvas></div></div>
+                <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-room"></canvas></div>
+                <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-abv"></canvas></div>
+                <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-trend"></canvas></div>
+            </div>
             <div class="flex justify-between items-center mb-3">
                 <div class="flex items-center gap-3">
                     <h2 class="text-base font-bold text-gray-800">รายการตัวอย่างสุราในคลังห้องปฏิบัติการ</h2>
@@ -271,13 +277,6 @@ html_content = """<!DOCTYPE html>
                 </div>
             </div>
 
-            <h2 class="text-base font-bold text-gray-800 mt-8 mb-3">การวิเคราะห์ปริมาณสารอินทรีย์และคลังสุราแยกสัดส่วน</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="border border-tms-border p-4 bg-white rounded flex justify-center"><div class="w-full max-w-[220px]"><canvas id="chart-type"></canvas></div></div>
-                <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-room"></canvas></div>
-                <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-abv"></canvas></div>
-                <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-trend"></canvas></div>
-            </div>
         </section>
 
         <section id="view-add-sample" class="view-section hidden">
@@ -330,7 +329,13 @@ html_content = """<!DOCTYPE html>
                             <textarea name="comment" rows="1" class="tms-input"></textarea>
                         </div>
                     </div>
-
+<div class="grid grid-cols-1 gap-4 border-t border-dashed pt-3 mt-2">
+                        <div class="flex flex-col">
+                            <label class="text-sm font-bold mb-1 text-tms-green">จำนวนตัวอย่างที่ต้องการจัดเก็บ (ขวด/ตัวอย่าง) <span class="text-red-500">*</span></label>
+                            <input type="number" name="quantity" min="1" max="100" value="1" required class="tms-input border-tms-green bg-green-50">
+                            <p class="text-[10px] text-gray-500 mt-1">ระบบจะรันรหัส ID และสร้าง QR Code แยกให้แต่ละขวดโดยอัตโนมัติหากใส่ค่ามากกว่า 1</p>
+                        </div>
+                    </div>
                     <div class="flex justify-end pt-4 border-t border-gray-100 gap-3">
                         <button type="button" class="px-5 py-2 border border-gray-300 text-gray-600 rounded text-sm font-semibold hover:bg-gray-50">ล้างฟอร์ม</button>
                         <button type="submit" class="bg-tms-green text-white font-semibold py-2 px-6 rounded text-sm hover:bg-green-700 shadow-sm">บันทึกข้อมูลเข้า Sheet</button>
@@ -898,33 +903,41 @@ html_content = """<!DOCTYPE html>
 
             $('#form-add-sample').submit(async function(e) {
                 e.preventDefault();
-                const newSample = {
-                    id: generateId(),
-                    name: $('input[name="name"]').val(),
-                    type: $('#sample-type-select').val(),
-                    proprietor: $('input[name="proprietor"]').val(),
-                    degree: $('input[name="degree"]').val(),
-                    locationId: $('#location-select').val(),
-                    collectionDate: $('input[name="collectionDate"]').val(),
-                    comment: $('textarea[name="comment"]').val()
-                };
+                const qty = parseInt($('input[name="quantity"]').val()) || 1;
+                const baseName = $('input[name="name"]').val();
+                
+                const newSamples = [];
+                for(let i = 0; i < qty; i++) {
+                    const itemName = qty > 1 ? `${baseName} (ขวดที่ ${i+1}/${qty})` : baseName;
+                    newSamples.push({
+                        id: generateId(),
+                        name: itemName,
+                        type: $('#sample-type-select').val(),
+                        proprietor: $('input[name="proprietor"]').val(),
+                        degree: $('input[name="degree"]').val(),
+                        locationId: $('#location-select').val(),
+                        collectionDate: $('input[name="collectionDate"]').val(),
+                        comment: $('textarea[name="comment"]').val()
+                    });
+                }
 
                 const samples = getSamples();
-                samples.push(newSample);
+                samples.push(...newSamples);
                 
                 Swal.fire({ title: 'กำลังส่งข้อมูลคลาวด์...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                 await saveSamples(samples);
                 
                 Swal.fire({
-                    title: 'บันทึกสำเร็จลงประวัติสำเร็จ!',
-                    text: 'ฐานข้อมูลอัปเดตเรียบร้อย กำลังเรียกดูหน้าป้ายฉลากถัง',
+                    title: `บันทึกสำเร็จ ${qty} รายการ!`,
+                    text: 'ระบบได้สร้างรหัสแยกแต่ละขวดเรียบร้อยแล้ว กำลังเรียกดูหน้าป้ายฉลากถัง',
                     icon: 'success',
                     confirmButtonColor: '#009640',
-                    timer: 1500,
+                    timer: 2000,
                     showConfirmButton: false
                 }).then(() => {
-                    showStickerModal([newSample]);
+                    showStickerModal(newSamples);
                     $('#form-add-sample')[0].reset();
+                    $('input[name="quantity"]').val(1);
                     updateLiveAging();
                 });
             });
@@ -1028,14 +1041,18 @@ html_content = """<!DOCTYPE html>
                         extendedProps: { sample: s }
                     });
 
-                    const reviewDate = dayjs(s.collectionDate).add(6, 'month').format('YYYY-MM-DD');
-                    events.push({
-                        title: `งวดชิม: ${s.name}`,
-                        start: reviewDate,
-                        backgroundColor: '#666666',
-                        allDay: true,
-                        extendedProps: { sample: s }
-                    });
+                    // สร้างรอบงวดชิม/ตรวจสอบ ทุกๆ 6 เดือน (ตั้งไว้สูงสุด 10 รอบ หรือ 5 ปี)
+                    let baseDate = dayjs(s.collectionDate);
+                    for (let i = 1; i <= 10; i++) {
+                        const reviewDate = baseDate.add(6 * i, 'month').format('YYYY-MM-DD');
+                        events.push({
+                            title: `รอบตรวจสอบ ${i*6} เดือน: ${s.name}`,
+                            start: reviewDate,
+                            backgroundColor: i % 2 === 0 ? '#D2B48C' : '#666666',
+                            allDay: true,
+                            extendedProps: { sample: s }
+                        });
+                    }
                 });
 
                 calendarInstance = new FullCalendar.Calendar(calendarEl, {
@@ -1229,24 +1246,50 @@ html_content = """<!DOCTYPE html>
             function handleScanResult(sampleId) {
                 const sample = getSamples().find(s => s.id === sampleId);
                 if (!sample) {
-                    Swal.fire({ title: 'ไม่พบรหัสวัตถุดิบถังนี้!', text: 'รหัสคิวอาร์ที่สแกนไม่มีในทะเบียนแผ่นประวัติงานชีตปัจจุบัน', icon: 'error', confirmButtonColor: '#009640' });
+                    Swal.fire({ title: 'ไม่พบรหัสวัตถุดิบถัง/ขวดนี้!', text: 'รหัสคิวอาร์ที่สแกนไม่มีในทะเบียน หรืออาจถูกทำลายไปแล้ว', icon: 'error', confirmButtonColor: '#009640' });
                     return;
                 }
 
                 const locName = getLocations().find(l => l.id === sample.locationId)?.name || 'ไม่ระบุ';
                 Swal.fire({
                     title: `ตรวจสอบพบ: ${sample.name}`,
-                    html: `<div class="text-left text-xs bg-gray-50 p-3 space-y-1 mt-2 border"><p><strong>ประเภทบ่มกลั่น:</strong> ${sample.type}</p><p><strong>ดีกรี (ABV %):</strong> ${sample.degree}%</p><p><strong>พิกัดวางคลัง:</strong> ${locName}</p><p><strong>ระยะเวลาหมักสะสม:</strong> ${calculateAging(sample.collectionDate)}</p></div>`,
+                    html: `
+                        <div class="text-left text-xs bg-gray-50 p-3 space-y-1 mt-2 border">
+                            <p><strong>ประเภทบ่มกลั่น:</strong> ${sample.type}</p>
+                            <p><strong>ดีกรี (ABV %):</strong> ${sample.degree}%</p>
+                            <p><strong>พิกัดวางคลัง:</strong> ${locName}</p>
+                            <p><strong>ระยะเวลาหมักสะสม:</strong> ${calculateAging(sample.collectionDate)}</p>
+                            <div class="mt-2 pt-2 border-t text-[10px] text-gray-500 max-h-16 overflow-y-auto">
+                                <strong>ประวัติหมายเหตุ:</strong><br/>${(sample.comment || '-').replace(/\n/g, '<br/>')}
+                            </div>
+                        </div>
+                    `,
+                    showDenyButton: true,
                     showCancelButton: true,
-                    confirmButtonText: 'ปิดรายงานหน้างาน',
-                    cancelButtonText: 'จำหน่ายออกจากระบบ (ลบ)',
+                    confirmButtonText: 'บันทึกการเบิก-ส่งคืน',
+                    denyButtonText: 'จำหน่ายออก (ลบ)',
+                    cancelButtonText: 'ปิดรายงาน',
                     confirmButtonColor: '#009640',
-                    cancelButtonColor: '#d33'
+                    denyButtonColor: '#d33',
+                    cancelButtonColor: '#666666'
                 }).then(async (result) => {
-                    if (result.dismiss === Swal.DismissReason.cancel) {
+                    if (result.isConfirmed) {
+                        const timestamp = dayjs().format('DD/MM/YY HH:mm');
+                        const newLog = `[${timestamp}] นำตัวอย่างไปตรวจสอบและกลับมาจัดเก็บรอบใหม่`;
+                        const currentComment = sample.comment ? sample.comment + '\n' : '';
+                        
+                        let samples = getSamples();
+                        const index = samples.findIndex(s => s.id === sampleId);
+                        samples[index].comment = currentComment + newLog;
+                        
+                        await saveSamples(samples);
+                        renderDashboard();
+                        Swal.fire({ title: 'บันทึกประวัติการเบิก-คืนสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false });
+                    } else if (result.isDenied) {
                         let newSamples = getSamples().filter(s => s.id !== sampleId);
                         await saveSamples(newSamples);
                         renderDashboard();
+                        Swal.fire({ title: 'จำหน่ายออกจากระบบแล้ว', icon: 'info', timer: 1000, showConfirmButton: false });
                     }
                 });
             }
