@@ -719,14 +719,39 @@
                 if (calendarInstance) calendarInstance.destroy();
                 const events = [];
                 getSamples().forEach(s => {
-                    events.push({ title: `นำเข้า: ${s.name}`, start: s.collectionDate, backgroundColor: '#009640', allDay: true, extendedProps: { sample: s } });
+                    // 1. งานนำเข้า (History แรกสุด) ให้แสดงบนปฏิทินเสมอ ไม่ว่าจะถูกตัดสต๊อกไปแล้วหรือไม่ เพื่อเก็บเป็นประวัติย้อนหลัง
+                    events.push({ 
+                        title: `นำเข้า: ${s.name}`, 
+                        start: s.collectionDate, 
+                        backgroundColor: '#009640', 
+                        allDay: true, 
+                        extendedProps: { sample: s } 
+                    });
+                    
                     let baseDate = dayjs(s.collectionDate);
+                    const isWithdrawn = s.status === 'withdrawn';
+                    const withdrawDay = isWithdrawn ? dayjs(s.withdrawDate) : null;
+
                     for (let i = 1; i <= 10; i++) {
-                        events.push({ title: `รอบ ${i*6} ด.: ${s.name}`, start: baseDate.add(6 * i, 'month').format('YYYY-MM-DD'), backgroundColor: i % 2 === 0 ? '#D2B48C' : '#666666', allDay: true, extendedProps: { sample: s } });
+                        const eventDate = baseDate.add(6 * i, 'month');
+                        
+                        // ✅ ปรับ Logic ใหม่: ถ้าตัวอย่างถูกเบิกไปแล้ว และรอบตรวจสอบนี้เกิดขึ้น "หลังจาก" วันที่ทำการเบิกจ่าย ให้ข้ามรอบนั้นไปเลย (ลบรอบอนาคตออก)
+                        // แต่ถ้ารอบตรวจสอบนั้นเกิดขึ้น "ก่อนหน้าหรือภายในวัน" ที่เบิกจ่าย (เป็นประวัติย้อนหลังที่ทำไปแล้ว) จะยังคงแสดงไว้ตามปกติ
+                        if (isWithdrawn && eventDate.isAfter(withdrawDay, 'day')) {
+                            continue; 
+                        }
+
+                        events.push({ 
+                            title: `รอบ ${i*6} ด.: ${s.name}`, 
+                            start: eventDate.format('YYYY-MM-DD'), 
+                            backgroundColor: i % 2 === 0 ? '#D2B48C' : '#666666', 
+                            allDay: true, 
+                            extendedProps: { sample: s } 
+                        });
                     }
                 });
                 calendarInstance = new FullCalendar.Calendar(calendarEl, {
-                    initialView: window.innerWidth < 768 ? 'listMonth' : 'dayGridMonth', // List view default for mobile
+                    initialView: window.innerWidth < 768 ? 'listMonth' : 'dayGridMonth', 
                     events: events,
                     headerToolbar: { left: 'prev,next', center: 'title', right: 'dayGridMonth,listMonth' },
                     eventClick: function(info) {
