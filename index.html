@@ -115,6 +115,7 @@
         <button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="add-sample">เพิ่มตัวอย่างสุรา</button>
         <button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="locations">สถานที่จัดเก็บ</button>
         <button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="calendar">ปฏิทินรอบตรวจสอบ</button>
+	<button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="history">ประวัติเบิกจ่าย (History)</button>
     </nav>
 
     <main class="pt-28 md:pt-32 pb-12 px-4 md:px-6 max-w-[1400px] mx-auto h-full">
@@ -291,7 +292,31 @@
                 <div id="calendar-element" class="min-w-[700px] md:min-w-0"></div>
             </div>
         </section>
-        
+        <section id="view-history" class="view-section hidden">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-4 border-b pb-2 gap-3">
+                <div>
+                    <h1 class="text-lg md:text-xl font-bold text-gray-800">ประวัติการเบิกและตัดรายการตัวอย่างสุรา</h1>
+                    <p class="text-xs text-gray-500 mt-1">Audit Trail: ตรวจสอบประวัติการนำตัวอย่างออกจากพื้นที่จัดเก็บ</p>
+                </div>
+            </div>
+
+            <div class="bg-white border border-tms-border rounded-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse min-w-[900px]">
+                        <thead class="bg-gray-200 text-gray-700">
+                            <tr>
+                                <th class="p-3 font-semibold whitespace-nowrap">ID / รหัส</th>
+                                <th class="p-3 font-semibold min-w-[150px]">Rotation No. / ชื่อรายการ</th>
+                                <th class="p-3 font-semibold whitespace-nowrap">วันที่ตัด Stock</th>
+                                <th class="p-3 font-semibold min-w-[200px]">เหตุผลในการเบิก/คอมเมนต์</th>
+                                <th class="p-3 font-semibold whitespace-nowrap text-center">การดำเนินการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body" class="divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
     </main>
 
     <div id="modal-scanner" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/60 backdrop-blur-sm p-4">
@@ -498,7 +523,8 @@
                 locations.forEach(loc => {
                     const roomName = getRoomName(loc.name);
                     if (!roomsMap[roomName]) roomsMap[roomName] = { count: 0 };
-                    roomsMap[roomName].count += samples.filter(s => s.locationId === loc.id).length;
+                // เพิ่มเงื่อนไข s.status !== 'withdrawn' เพื่อไม่นับถังที่ถูกตัดสต๊อก
+                roomsMap[roomName].count += samples.filter(s => s.locationId === loc.id && s.status !== 'withdrawn').length;
                 });
 
                 const currentRoomVal = $('#filter-room').val();
@@ -520,6 +546,8 @@
                 });
 
                 let filtered = samples.filter(s => {
+                    if (s.status === 'withdrawn') return false; // ซ่อนรายการที่ถูกเบิกแล้ว
+
                     const roomName = getRoomName(locations.find(l => l.id === s.locationId)?.name || '');
                     const matchSearch = s.name.toLowerCase().includes(searchTerm) || (s.comment && s.comment.toLowerCase().includes(searchTerm)) || s.id.toLowerCase().includes(searchTerm);
                     const matchType = filterType === 'all' ? true : s.type === filterType;
@@ -646,7 +674,8 @@
             function renderLocations() {
                 const $grid = $('#locations-grid'); $grid.empty();
                 getLocations().forEach(loc => {
-                    const count = getSamples().filter(s => s.locationId === loc.id).length;
+                    // ป้องกันไม่ให้นับรวมถังที่ถูกตัดสต๊อกแล้ว
+                    const count = getSamples().filter(s => s.locationId === loc.id && s.status !== 'withdrawn').length;
                     $grid.append(`
                         <div class="border border-tms-border bg-white p-4 rounded-sm relative group cursor-pointer hover:shadow transition-shadow btn-view-loc-samples" data-id="${loc.id}">
                             <h3 class="font-bold text-tms-green text-sm">${loc.name}</h3>
@@ -710,8 +739,42 @@
 
             $(document).on('click', '.btn-delete', function() {
                 const id = $(this).data('id');
-                Swal.fire({ title: 'ยืนยันลบ?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'ลบ' }).then(async (res) => {
-                    if (res.isConfirmed) { await saveSamples(getSamples().filter(s => s.id !== id)); renderDashboard(); }
+                const sample = getSamples().find(s => s.id === id);
+                if(!sample) return;
+
+                Swal.fire({ 
+                    title: 'ระบุเหตุผลการตัด Stock', 
+                    html: `
+                        <p class="text-xs text-gray-500 mb-2 text-left">รหัส: <strong>${sample.name}</strong></p>
+                        <textarea id="withdraw-reason" class="tms-input w-full h-24" placeholder="เช่น เบิกไปทำ Sensory Test, ส่งวิเคราะห์แล็บ, หมดอายุบ่ม..."></textarea>
+                    `,
+                    icon: 'warning', 
+                    showCancelButton: true, 
+                    confirmButtonColor: '#d33', 
+                    confirmButtonText: 'ยืนยันตัด Stock',
+                    preConfirm: () => {
+                        const reason = document.getElementById('withdraw-reason').value.trim();
+                        if (!reason) {
+                            Swal.showValidationMessage('กรุณาระบุเหตุผลเพื่อการทวนสอบตามมาตรฐาน (Audit Trail)');
+                            return false;
+                        }
+                        return reason;
+                    }
+                }).then(async (res) => {
+                    if (res.isConfirmed) { 
+                        let samples = getSamples();
+                        const index = samples.findIndex(s => s.id === id);
+                        if (index !== -1) {
+                            samples[index].status = 'withdrawn';
+                            samples[index].withdrawReason = res.value;
+                            samples[index].withdrawDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
+                            
+                            await saveSamples(samples); 
+                            renderDashboard(); 
+                            if ($('#view-history').hasClass('active')) renderHistory();
+                            Swal.fire({ title: 'บันทึกประวัติสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false });
+                        }
+                    }
                 });
             });
 
@@ -827,8 +890,71 @@
                     const newUrl = $('#endpoint-url-input').val().trim();
                     if(newUrl) { SCRIPT_URL = newUrl; localStorage.setItem('tms_script_url', newUrl); Swal.close(); await syncAllData(); renderDashboard(); }
                 });
+            }); // ✅ ปิดวงเล็บของปุ่ม Settings ตรงนี้ เพื่อไม่ให้ไปครอบฟังก์ชันอื่น
+
+            // ฟังก์ชันเรนเดอร์หน้าประวัติ (ย้ายออกมาเป็นอิสระแล้ว)
+            function renderHistory() {
+                const samples = getSamples();
+                const withdrawnSamples = samples.filter(s => s.status === 'withdrawn').sort((a, b) => new Date(b.withdrawDate) - new Date(a.withdrawDate));
+                
+                const $tbody = $('#history-table-body');
+                $tbody.empty();
+                
+                if (withdrawnSamples.length === 0) {
+                    $tbody.append(`<tr><td colspan="5" class="p-6 text-center text-gray-400">ยังไม่มีประวัติการเบิกจ่าย</td></tr>`);
+                } else {
+                    withdrawnSamples.forEach(s => {
+                        $tbody.append(`
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-3 font-mono text-xs text-gray-500">${s.id}</td>
+                                <td class="p-3 font-bold text-gray-800 text-xs">${s.name}<br><span class="text-[10px] text-gray-400 font-normal">ประเภท: ${s.type}</span></td>
+                                <td class="p-3 text-xs text-red-600 font-semibold">${dayjs(s.withdrawDate).format('DD/MM/YYYY HH:mm')}</td>
+                                <td class="p-3 text-xs text-gray-700 italic max-w-[200px] break-words">"${s.withdrawReason || '-'}"</td>
+                                <td class="p-3 text-center whitespace-nowrap text-xs">
+                                    <button class="text-tms-green hover:underline font-bold btn-restore" data-id="${s.id}">+ นำกลับคืนคลัง</button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                }
+            }
+
+            // ผูก Event ให้โหลดข้อมูลหน้าประวัติเมื่อสลับเมนู
+            $(document).on('click', '.nav-btn[data-target="history"]', function() {
+                renderHistory();
             });
-        });
+
+            // Event สำหรับการกดนำกลับคืนคลัง (Restore)
+            $(document).on('click', '.btn-restore', function() {
+                const id = $(this).data('id');
+                Swal.fire({
+                    title: 'ยืนยันนำตัวอย่างนี้กลับเข้าคลัง?',
+                    text: "สถานะจะถูกปรับให้กลับมาเป็น Active พร้อมเก็บประวัติการนำกลับ",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#009640',
+                    confirmButtonText: 'ยืนยันนำกลับคืน'
+                }).then(async (res) => {
+                    if (res.isConfirmed) {
+                        let samples = getSamples();
+                        const index = samples.findIndex(s => s.id === id);
+                        if (index !== -1) {
+                            samples[index].status = 'active';
+                            const restoreLog = `\n[นำกลับคืนเมื่อ ${dayjs().format('DD/MM/YY')}] เดิมตัดออกเพราะ: ${samples[index].withdrawReason}`;
+                            samples[index].comment = (samples[index].comment ? samples[index].comment : '') + restoreLog;
+                            
+                            delete samples[index].withdrawReason;
+                            delete samples[index].withdrawDate;
+                            
+                            await saveSamples(samples);
+                            renderHistory();
+                            Swal.fire({ title: 'คืนเข้าคลังเรียบร้อย', icon: 'success', timer: 1500, showConfirmButton: false });
+                        }
+                    }
+                });
+            });
+
+        }); // สิ้นสุด document.ready
     </script>
 </body>
 </html>
