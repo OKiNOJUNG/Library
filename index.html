@@ -241,8 +241,7 @@
                         </path>
                     </svg>
                     <!-- Glowing Badge -->
-                    <span id="notification-badge"
-                        class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,1)] hidden"></span>
+                    <span id="notification-badge" class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full shadow-[0_0_10px_rgba(239,68,68,1)] hidden flex items-center justify-center">0</span>
                 </button>
 
                 <!-- Notification Dropdown (Glassmorphism / Visual Effect Material) -->
@@ -485,11 +484,23 @@
                     <h1 class="text-lg md:text-xl font-bold text-gray-800">ระบบบริหารสถานที่จัดวางถังและชั้นบ่มสุรา</h1>
                     <p class="text-xs text-gray-500 mt-1">แสดงพื้นที่จัดเก็บทั้งหมดในระบบ</p>
                 </div>
-                <button id="btn-add-location"
-                    class="w-full sm:w-auto bg-tms-green text-white rounded-full px-4 py-2 text-xs font-semibold hover:bg-green-700 transition-colors shadow-sm">+
-                    เพิ่มสถานที่จัดเก็บใหม่</button>
+                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <input type="text" id="search-map-input" placeholder="ค้นหาชื่อห้อง..." class="tms-input text-sm w-full sm:w-48">
+                    <button id="btn-add-location" class="w-full sm:w-auto bg-tms-green text-white rounded-full px-4 py-2 text-xs font-semibold hover:bg-green-700 transition-colors shadow-sm">+ เพิ่มสถานที่จัดเก็บใหม่</button>
+                </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4" id="locations-grid">
+            <!-- The Map container -->
+            <div class="bg-gray-100 p-4 border border-gray-300 rounded-lg min-h-[400px]">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="text-sm font-bold text-gray-600">แผนผังห้องจัดเก็บ (Visual Map)</div>
+                    <div class="flex gap-3 text-xs font-semibold">
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-green-500"></span> ว่าง / น้อย</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-yellow-500"></span> ปานกลาง</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-red-500"></span> หนาแน่น</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="locations-grid">
+                </div>
             </div>
         </section>
 
@@ -856,11 +867,23 @@
                 e.preventDefault();
                 const u = $('#login-username').val().trim();
                 const p = $('#login-password').val().trim();
-                if ((u === 'admin' && p === 'admin321') || (u === 'user' && p === 'user')) {
-                    currentUser = { username: u, role: u === 'admin' ? 'Admin' : 'Operator' };
+                if ((u === 'admin' && p === 'admin321') || (u === 'user' && p === 'user') || (u === 'superadmin' && p === 'superadmin')) {
+                    currentUser = { username: u, role: u === 'admin' || u === 'superadmin' ? 'Admin' : 'Operator' };
                     localStorage.setItem('lms_user', JSON.stringify(currentUser));
                     $('#login-overlay').addClass('hidden');
                     updateUserHeader();
+                    
+                    setTimeout(() => {
+                        const upcomingCount = updateUpcomingNotifications();
+                        if (upcomingCount > 0) {
+                            Swal.fire({
+                                title: 'ยินดีต้อนรับ',
+                                html: `คุณมีตัวอย่างที่ถึงกำหนดตรวจสอบ <b>${upcomingCount}</b> รายการใน 14 วันนี้`,
+                                icon: 'info',
+                                confirmButtonColor: '#009640'
+                            });
+                        }
+                    }, 500);
                 } else {
                     Swal.fire({ title: 'เข้าสู่ระบบล้มเหลว', text: 'ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง', icon: 'error' });
                 }
@@ -1128,18 +1151,31 @@
 
             function renderLocations() {
                 const $grid = $('#locations-grid'); $grid.empty();
+                const searchTerm = ($('#search-map-input').val() || '').toLowerCase();
+                
                 getLocations().forEach(loc => {
-                    // ป้องกันไม่ให้นับรวมถังที่ถูกตัดสต๊อกแล้ว
                     const count = getSamples().filter(s => s.locationId === loc.id && s.status !== 'withdrawn').length;
+                    
+                    let densityColor = 'bg-green-500/80 border-green-600'; // Default low density
+                    if (count >= 20) densityColor = 'bg-red-500/80 border-red-600';
+                    else if (count >= 10) densityColor = 'bg-yellow-500/80 border-yellow-600';
+
+                    const isMatch = searchTerm && loc.name.toLowerCase().includes(searchTerm);
+                    const highlightClass = isMatch ? 'ring-4 ring-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.6)] scale-105 z-10' : (searchTerm ? 'opacity-40' : '');
+
                     $grid.append(`
-                        <div class="border border-tms-border bg-white p-4 rounded-sm relative group cursor-pointer hover:shadow transition-shadow btn-view-loc-samples" data-id="${loc.id}">
-                            <h3 class="font-bold text-tms-green text-sm">${loc.name}</h3>
-                            <p class="text-xs text-gray-500 mt-1">คลังสะสม: <span class="font-bold">${count} รายการ</span></p>
-                            <button class="absolute top-2 right-2 text-xs text-red-400 sm:opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-600 btn-delete-loc" data-id="${loc.id}" data-count="${count}">[ลบ]</button>
+                        <div class="border-2 ${densityColor} text-white p-4 rounded-lg relative group cursor-pointer hover:shadow-lg transition-all duration-300 btn-view-loc-samples ${highlightClass}" data-id="${loc.id}" style="min-height: 100px;">
+                            <h3 class="font-bold text-sm drop-shadow-md">${loc.name}</h3>
+                            <p class="text-xs mt-1 drop-shadow-md text-white/90">คลังสะสม: <span class="font-bold">${count} รายการ</span></p>
+                            <button class="absolute top-2 right-2 text-xs text-white/50 sm:opacity-0 group-hover:opacity-100 transition-opacity hover:text-white btn-delete-loc drop-shadow-md" data-id="${loc.id}" data-count="${count}">[ลบ]</button>
                         </div>
                     `);
                 });
             }
+
+            $('#search-map-input').on('input', function() {
+                renderLocations();
+            });
 
             $('#btn-add-location').click(function () {
                 Swal.fire({
@@ -1272,6 +1308,16 @@
                         const index = samples.findIndex(s => s.id === id);
                         if (index !== -1) {
                             samples[index].status = 'active';
+                            
+                            // Formatting the automated comment
+                            const tDate = samples[index].testDate || '-';
+                            const tReason = samples[index].testReason || '-';
+                            const returnLog = `\n[ระบบ] นำออกไปทดสอบเมื่อ ${tDate} เหตุผล: ${tReason}`;
+                            samples[index].comment = (samples[index].comment ? samples[index].comment : '') + returnLog;
+                            
+                            delete samples[index].testDate;
+                            delete samples[index].testReason;
+
                             addCustodyLog(samples[index], 'นำกลับคืนเข้าคลัง', currentUser?.username || 'System', 'นำตัวอย่างกลับคืนหลังจากการทดสอบ');
                             await saveSamples(samples);
                             renderDashboard();
@@ -1430,13 +1476,32 @@
                         let samples = getSamples();
                         const index = samples.findIndex(s => s.id === actionMenuSample.id);
                         samples[index].status = 'testing';
+                        samples[index].testDate = dayjs().format('DD/MM/YYYY HH:mm');
+                        samples[index].testReason = res.value;
                         addCustodyLog(samples[index], 'นำไปทดสอบ', currentUser?.username || 'System', `เหตุผล: ${res.value}`);
                         await saveSamples(samples);
                         renderDashboard();
                         $('#modal-action').addClass('hidden');
-                        Swal.fire({ title: 'บันทึกสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false });
+                        Swal.fire({ title: 'บันทึกสำเร็จ', text: 'ข้อมูลถูกส่งไปทำทดสอบเรียบร้อยแล้ว', icon: 'success', timer: 1500, showConfirmButton: false });
                     }
                 });
+            });
+
+            $(document).on('click', '.btn-snooze', async function(e) {
+                e.stopPropagation();
+                const id = $(this).data('id');
+                const cycle = $(this).data('cycle').toString();
+                
+                let samples = getSamples();
+                const index = samples.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    if (!samples[index].snoozedCycles) samples[index].snoozedCycles = {};
+                    // Snooze for 7 days
+                    samples[index].snoozedCycles[cycle] = dayjs().add(7, 'day').format('YYYY-MM-DD');
+                    await saveSamples(samples);
+                    updateUpcomingNotifications();
+                    Swal.fire({ title: 'เลื่อนแจ้งเตือนสำเร็จ', text: 'ระบบจะแจ้งเตือนอีกครั้งใน 7 วัน', icon: 'success', timer: 1500, showConfirmButton: false });
+                }
             });
 
             $('#btn-action-withdraw').click(function () {
