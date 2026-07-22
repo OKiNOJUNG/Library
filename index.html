@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#009640">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwOTY0MCI+PHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNU0yIDEybDEwIDUgMTAtNSIvPjwvc3ZnPg==">
     <title>Library Management System</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,6 +94,29 @@
     </style>
 </head>
 <body class="bg-white text-gray-800 min-h-screen relative overflow-x-hidden antialiased">
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="fixed inset-0 z-[200] bg-white flex items-center justify-center hidden">
+        <div class="w-full max-w-md p-6 bg-white border border-gray-200 shadow-xl rounded-lg mx-4">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-tms-green rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">เข้าสู่ระบบ</h2>
+                <p class="text-sm text-gray-500 mt-1">Library Management System</p>
+            </div>
+            <form id="form-login" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">ชื่อผู้ใช้งาน</label>
+                    <input type="text" id="login-username" class="tms-input w-full" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">รหัสผ่าน</label>
+                    <input type="password" id="login-password" class="tms-input w-full" required>
+                </div>
+                <button type="submit" class="w-full bg-tms-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors shadow-sm mt-4">เข้าสู่ระบบ</button>
+            </form>
+        </div>
+    </div>
 
     <header class="bg-tms-green text-white w-full fixed top-0 z-50 shadow-sm flex justify-between items-center px-4 md:px-6 py-2">
         <div class="flex items-center gap-2 md:gap-3">
@@ -100,13 +126,34 @@
             <span class="text-lg md:text-xl font-bold tracking-wide truncate">Library Management System</span>
         </div>
         <div class="flex items-center gap-2 md:gap-4 text-sm">
+            
+            <!-- Notification Bell with Glow and Material Effect -->
+            <div class="relative">
+                <button id="btn-notifications" class="relative w-8 h-8 md:w-10 md:h-10 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    <!-- Glowing Badge -->
+                    <span id="notification-badge" class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,1)] hidden"></span>
+                </button>
+                
+                <!-- Notification Dropdown (Glassmorphism / Visual Effect Material) -->
+                <div id="notification-dropdown" class="absolute right-0 mt-2 w-72 md:w-80 rounded-xl hidden z-50 overflow-hidden border border-white/30 shadow-[0_4px_30px_rgba(0,150,64,0.3)] bg-white/70 backdrop-blur-xl text-gray-800">
+                    <div class="p-3 border-b border-gray-200/50 bg-white/40 flex justify-between items-center">
+                        <h3 class="font-bold text-gray-800 text-base">Upcoming Checks</h3>
+                        <span class="text-xs bg-tms-green/10 text-tms-green px-2 py-1 rounded-full font-semibold">14 วันถัดไป</span>
+                    </div>
+                    <div id="notification-list" class="max-h-80 overflow-y-auto p-2 space-y-2">
+                        <!-- Items injected by JS -->
+                    </div>
+                </div>
+            </div>
+
             <div class="text-right hidden md:block">
-                <div class="font-bold">เจ้าหน้าที่ชำนาญการอาวุโสเทคนิค</div>
-                <div class="text-xs text-green-200">ฝ่ายพัฒนาและการปรุงสุรา | ThaiBev</div>
+                <div class="font-bold" id="header-user-name">เจ้าหน้าที่ชำนาญการ</div>
+                <div class="text-xs text-green-200" id="header-user-role">ฝ่ายพัฒนาและการปรุงสุรา</div>
             </div>
-            <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 border-2 border-white overflow-hidden flex-shrink-0">
-                <svg class="w-full h-full text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-            </div>
+            <button id="btn-logout" class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-red-100 hover:bg-red-200 border-2 border-white overflow-hidden flex-shrink-0 flex items-center justify-center transition-colors" title="ออกจากระบบ">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            </button>
         </div>
     </header>
 
@@ -146,7 +193,7 @@
 
             <div id="zones-container" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4 mb-6"></div>
 
-            <h2 class="text-base font-bold text-gray-800 mt-2 mb-3">การวิเคราะห์ตัวอย่างในคลังสุราแยกตามสัดส่วน</h2>
+            <h2 class="text-base font-bold text-gray-800 mt-2 mb-3">การวิเคราะห์ปตัวอย่างในคลังสุราแยกสัดส่วน</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <div class="border border-tms-border p-4 bg-white rounded flex justify-center"><div class="w-full max-w-[220px]"><canvas id="chart-type"></canvas></div></div>
                 <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-room"></canvas></div>
@@ -339,7 +386,7 @@
     <div id="modal-sticker" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/60 p-2 md:p-6">
         <div class="bg-white rounded p-4 md:p-6 w-full max-w-4xl max-h-[95vh] shadow-2xl flex flex-col relative">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-2 border-b gap-3 pr-8">
-                <h2 class="text-base md:text-lg font-bold text-gray-800">แผ่นสติ๊กเกอร์ติดข้างถัง (A4 มาตรฐาน)</h2>
+                <h2 class="text-base md:text-lg font-bold text-gray-800">แผ่นสติ๊กเกอร์ติดข้างขวด (A4 มาตรฐาน)</h2>
                 <button id="btn-print-sticker" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded text-xs">สั่งพิมพ์ออกเครื่อง</button>
             </div>
             <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-red-500 p-1">
@@ -359,6 +406,65 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- Action Menu Modal -->
+    <div id="modal-action" class="fixed inset-0 z-[160] flex items-center justify-center hidden bg-black/60 p-4">
+        <div class="bg-white rounded p-4 md:p-6 w-full max-w-sm shadow-xl relative text-center">
+            <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-red-500">
+                <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h2 class="text-lg font-bold text-gray-800 mb-2">จัดการตัวอย่าง</h2>
+            <div id="action-qr-container" class="flex justify-center mb-3"></div>
+            <p id="action-sample-info" class="text-sm text-gray-600 mb-4 bg-gray-50 p-2 border rounded"></p>
+            <div class="flex flex-col gap-2">
+                <button id="btn-action-lab" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors text-sm">บันทึกผลแล็บ</button>
+                <button id="btn-action-test" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded transition-colors text-sm">นำมาทดสอบ</button>
+                <button id="btn-action-withdraw" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors text-sm">ตัดจ่ายออก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lab Result Modal -->
+    <div id="modal-lab-result" class="fixed inset-0 z-[150] flex items-center justify-center hidden bg-black/60 p-4">
+        <div class="bg-white rounded p-4 md:p-6 w-full max-w-lg shadow-xl relative max-h-[90vh] overflow-y-auto">
+            <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-red-500">
+                <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h2 class="text-base font-bold text-gray-800 mb-3 border-b pb-1.5 pr-8">บันทึกผลการตรวจวิเคราะห์</h2>
+            <form id="form-lab-result" class="space-y-4">
+                <input type="hidden" id="lab-sample-id">
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">สี (Color)</label><input type="text" id="lab-color" class="tms-input w-full" required></div>
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">กลิ่น (Odor)</label><input type="text" id="lab-odor" class="tms-input w-full" required></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">รสชาติ (Taste)</label><input type="text" id="lab-taste" class="tms-input w-full" required></div>
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">ค่า ABV (%)</label><input type="number" step="0.1" id="lab-abv" class="tms-input w-full" required></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">ค่า pH</label><input type="number" step="0.1" id="lab-ph" class="tms-input w-full" required></div>
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">ความขุ่น (Turbidity)</label><input type="text" id="lab-turbidity" class="tms-input w-full" required></div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">ไฟล์ผลวิเคราะห์ (แนบรูป/PDF)</label>
+                    <input type="file" id="lab-file" class="tms-input w-full text-sm">
+                </div>
+                <button type="submit" class="w-full bg-tms-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors shadow-sm">บันทึกผลตรวจสอบ</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Chain of Custody History Modal -->
+    <div id="modal-custody-history" class="fixed inset-0 z-[150] flex items-center justify-center hidden bg-black/60 p-4">
+        <div class="bg-white rounded p-4 md:p-6 w-full max-w-2xl shadow-xl relative max-h-[90vh] flex flex-col">
+            <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-red-500">
+                <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h2 class="text-base font-bold text-gray-800 mb-3 border-b pb-1.5 pr-8">ประวัติและการเคลื่อนย้าย (Chain of Custody)</h2>
+            <div id="custody-history-content" class="overflow-y-auto flex-1 text-sm space-y-4">
+            </div>
+        </div>
+    </div>
+
     <script>
         // --- DATA MANAGEMENT WITH GOOGLE SHEETS & LOCALSTORAGE FALLBACK ---
         let liquor_samples = [];
@@ -372,6 +478,25 @@
         function getTypes() { return liquor_types; }
 
         function generateId() { return 'id_' + Math.random().toString(36).substr(2, 9); }
+        
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
+            });
+        }
+        
+        let currentUser = JSON.parse(localStorage.getItem('lms_user') || 'null');
+        
+        function addCustodyLog(sample, action, user, details, fileUrl = null) {
+            if (!sample.custodyLogs) sample.custodyLogs = [];
+            sample.custodyLogs.push({
+                timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+                action: action,
+                user: user,
+                details: details,
+                fileUrl: fileUrl
+            });
+        }
 
         async function syncAllData(silent = false) {
             if (!silent && typeof Swal !== 'undefined') {
@@ -454,7 +579,119 @@
         let currentPage = 1; const itemsPerPage = 10;
         let chartTypeInst = null; let chartRoomInst = null; let chartAbvInst = null; let chartTrendInst = null;
 
+        function updateUpcomingNotifications() {
+            if (typeof getSamples !== 'function') return;
+            const samples = getSamples();
+            const upcomingItems = [];
+            const today = dayjs();
+            const lookaheadDays = 14;
+
+            samples.forEach(s => {
+                if (s.status === 'withdrawn') return;
+                let baseDate = dayjs(s.collectionDate);
+                const withdrawDay = s.withdrawDate ? dayjs(s.withdrawDate) : null;
+                
+                for (let i = 1; i <= 10; i++) {
+                    const eventDate = baseDate.add(6 * i, 'month');
+                    if (s.status === 'withdrawn' && eventDate.isAfter(withdrawDay, 'day')) {
+                        continue;
+                    }
+
+                    const diffDays = eventDate.diff(today, 'day');
+                    if (diffDays >= 0 && diffDays <= lookaheadDays) {
+                        upcomingItems.push({
+                            sample: s,
+                            cycle: i * 6,
+                            date: eventDate,
+                            diffDays: diffDays
+                        });
+                    }
+                }
+            });
+
+            upcomingItems.sort((a, b) => a.diffDays - b.diffDays);
+
+            const badge = $('#notification-badge');
+            const list = $('#notification-list');
+            list.empty();
+
+            if (upcomingItems.length > 0) {
+                badge.removeClass('hidden');
+                upcomingItems.forEach(item => {
+                    const urgencyColor = item.diffDays <= 3 ? 'text-red-600 font-bold' : 'text-gray-800';
+                    list.append(`
+                        <div class="p-3 mb-2 bg-white/60 rounded-lg border border-white/50 shadow-sm cursor-pointer hover:bg-white/80 transition-colors backdrop-blur-sm" onclick="handleActionMenu('${item.sample.id}')">
+                            <div class="flex justify-between items-start">
+                                <div class="font-semibold text-sm text-gray-800">${item.sample.name}</div>
+                                <div class="text-xs ${urgencyColor}">${item.diffDays === 0 ? 'วันนี้' : 'อีก ' + item.diffDays + ' วัน'}</div>
+                            </div>
+                            <div class="text-xs text-gray-600 mt-1">รอบตรวจสอบ: ${item.cycle} เดือน</div>
+                            <div class="text-xs text-gray-500">วันที่: ${item.date.format('DD/MM/YYYY')}</div>
+                        </div>
+                    `);
+                });
+            } else {
+                badge.addClass('hidden');
+                list.append('<div class="p-4 text-center text-sm text-gray-500">ไม่มีรายการที่จะมาถึงใน 14 วันนี้</div>');
+            }
+        }
+
         $(document).ready(function() {
+            // Login Logic
+            if (!currentUser) {
+                $('#login-overlay').removeClass('hidden');
+            } else {
+                updateUserHeader();
+            }
+
+            $('#form-login').submit(function(e) {
+                e.preventDefault();
+                const u = $('#login-username').val().trim();
+                const p = $('#login-password').val().trim();
+                if ((u === 'admin' && p === 'admin321') || (u === 'user' && p === 'user')) {
+                    currentUser = { username: u, role: u === 'admin' ? 'Admin' : 'Operator' };
+                    localStorage.setItem('lms_user', JSON.stringify(currentUser));
+                    $('#login-overlay').addClass('hidden');
+                    updateUserHeader();
+                } else {
+                    Swal.fire({ title: 'เข้าสู่ระบบล้มเหลว', text: 'ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง', icon: 'error' });
+                }
+            });
+
+            $('#btn-logout').click(function() {
+                localStorage.removeItem('lms_user');
+                location.reload();
+            });
+
+            function updateUserHeader() {
+                if(!currentUser) return;
+                $('#header-user-name').text(currentUser.username);
+                $('#header-user-role').text(currentUser.role === 'Admin' ? 'ผู้ดูแลระบบ (Admin)' : 'พนักงานปฏิบัติการ (Operator)');
+                if (currentUser.role !== 'Admin') {
+                    // Hide admin menus
+                    $('.nav-btn[data-target="add-sample"]').hide();
+                    $('.nav-btn[data-target="locations"]').hide();
+                    $('#btn-settings').hide();
+                    $('#btn-add-location').hide();
+                }
+            }
+
+            $('#btn-notifications').click(function(e) {
+                e.stopPropagation();
+                $('#notification-dropdown').toggleClass('hidden');
+                if (!$('#notification-dropdown').hasClass('hidden')) {
+                    updateUpcomingNotifications();
+                }
+            });
+            
+            $(document).click(function(e) {
+                if (!$(e.target).closest('#btn-notifications, #notification-dropdown').length) {
+                    $('#notification-dropdown').addClass('hidden');
+                }
+            });
+
+            updateUpcomingNotifications();
+
             syncAllData().then(() => { populateTypes(); renderDashboard(); });
 
             $('.nav-btn').click(function() {
@@ -581,16 +818,24 @@
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="p-3 text-center"><input type="checkbox" class="sample-checkbox w-4 h-4" value="${s.id}"></td>
                                 <td class="p-3 font-mono text-xs font-medium text-tms-green hover:underline cursor-pointer btn-edit" data-id="${s.id}">${s.id}</td>
-                                <td class="p-3"><div class="font-bold text-gray-800 text-xs">${s.name}</div>${s.comment ? `<div class="text-[11px] text-gray-400 truncate max-w-[150px] md:max-w-xs">${s.comment}</div>` : ''}</td>
-                                <td class="p-3 text-xs"><span class="bg-gray-100 text-gray-700 px-2 py-0.5 border rounded">${s.type}</span></td>
+                                <td class="p-3">
+                                    <div class="font-bold text-gray-800 text-xs">${s.name}</div>
+                                    ${s.comment ? `<div class="text-[11px] text-gray-500 whitespace-pre-wrap mt-1">${s.comment}</div>` : ''}
+                                </td>
+                                <td class="p-3 text-xs">
+                                    <span class="bg-gray-100 text-gray-700 px-2 py-0.5 border rounded">${s.type}</span>
+                                    ${s.status === 'testing' ? '<div class="mt-1"><span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 border border-yellow-300 rounded text-[10px]">กำลังทดสอบ</span></div>' : ''}
+                                </td>
                                 <td class="p-3 text-xs text-gray-600">${s.proprietor || '-'}</td>
                                 <td class="p-3 font-bold text-gray-700 text-xs">${s.degree}%</td>
-                                <td class="p-3 text-xs text-gray-600 truncate max-w-[120px]">${locName}</td>
+                                <td class="p-3 text-xs text-gray-600">${locName}</td>
                                 <td class="p-3 text-xs">${dayjs(s.collectionDate).format('DD/MM/YYYY')}</td>
                                 <td class="p-3 text-center font-semibold text-tms-green text-xs">${calculateAging(s.collectionDate)}</td>
                                 <td class="p-3 text-center whitespace-nowrap text-xs">
-                                    <div class="flex justify-center gap-3">
+                                    <div class="flex flex-wrap justify-center gap-2">
+                                        ${s.status === 'testing' ? `<button class="text-yellow-600 hover:text-yellow-800 font-medium btn-return" data-id="${s.id}">คืนคลัง</button>` : ''}
                                         <button class="text-blue-600 hover:text-blue-800 font-medium btn-reprint" data-id="${s.id}">พิมพ์</button>
+                                        <button class="text-indigo-600 hover:text-indigo-800 font-medium btn-history" data-id="${s.id}">ประวัติ</button>
                                         <button class="text-red-500 hover:text-red-700 font-medium btn-delete" data-id="${s.id}">ลบ</button>
                                     </div>
                                 </td>
@@ -656,12 +901,14 @@
                 const baseName = $('input[name="name"]').val();
                 const newSamples = [];
                 for(let i = 0; i < qty; i++) {
-                    newSamples.push({
+                    const newSmp = {
                         id: generateId(), name: qty > 1 ? `${baseName} (ขวดที่ ${i+1}/${qty})` : baseName,
                         type: $('#sample-type-select').val(), proprietor: $('input[name="proprietor"]').val(),
                         degree: $('input[name="degree"]').val(), locationId: $('#location-select').val(),
                         collectionDate: $('input[name="collectionDate"]').val(), comment: $('textarea[name="comment"]').val()
-                    });
+                    };
+                    addCustodyLog(newSmp, 'นำเข้า (Created)', currentUser?.username || 'System', `สร้างเข้าระบบ (Location: ${$('#location-select option:selected').text()})`);
+                    newSamples.push(newSmp);
                 }
                 const samples = getSamples(); samples.push(...newSamples);
                 Swal.fire({ title: 'กำลังส่งข้อมูล...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
@@ -755,8 +1002,7 @@
                     events: events,
                     headerToolbar: { left: 'prev,next', center: 'title', right: 'dayGridMonth,listMonth' },
                     eventClick: function(info) {
-                        const s = info.event.extendedProps.sample;
-                        Swal.fire({ title: info.event.title, html: `<div class="text-left text-sm space-y-2"><p><strong>ชนิด:</strong> ${s.type}</p><p><strong>ABV:</strong> ${s.degree}%</p></div>`, confirmButtonColor: '#009640' });
+                        handleActionMenu(info.event.extendedProps.sample.id);
                     }
                 });
                 calendarInstance.render();
@@ -793,11 +1039,36 @@
                             samples[index].status = 'withdrawn';
                             samples[index].withdrawReason = res.value;
                             samples[index].withdrawDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
+                            addCustodyLog(samples[index], 'เบิก/ตัด Stock', currentUser?.username || 'System', `เหตุผล: ${res.value}`);
                             
                             await saveSamples(samples); 
                             renderDashboard(); 
                             if ($('#view-history').hasClass('active')) renderHistory();
                             Swal.fire({ title: 'บันทึกประวัติสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false });
+                        }
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-return', function() {
+                const id = $(this).data('id');
+                Swal.fire({
+                    title: 'ยืนยันการนำคืนคลัง?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#009640',
+                    confirmButtonText: 'ยืนยันนำคืน'
+                }).then(async (res) => {
+                    if (res.isConfirmed) {
+                        let samples = getSamples();
+                        const index = samples.findIndex(s => s.id === id);
+                        if (index !== -1) {
+                            samples[index].status = 'active';
+                            addCustodyLog(samples[index], 'นำกลับคืนเข้าคลัง', currentUser?.username || 'System', 'นำตัวอย่างกลับคืนหลังจากการทดสอบ');
+                            await saveSamples(samples);
+                            renderDashboard();
+                            if ($('#view-history').hasClass('active')) renderHistory();
+                            Swal.fire({ title: 'คืนเข้าคลังสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false });
                         }
                     }
                 });
@@ -825,7 +1096,12 @@
                 }).then(async (res) => {
                     if (res.isConfirmed) {
                         const samples = getSamples(); const index = samples.findIndex(s => s.id === sample.id);
-                        if (index !== -1) { samples[index] = { ...samples[index], ...res.value }; await saveSamples(samples); renderDashboard(); }
+                        if (index !== -1) { 
+                            samples[index] = { ...samples[index], ...res.value }; 
+                            addCustodyLog(samples[index], 'แก้ไขข้อมูล', currentUser?.username || 'System', 'อัปเดตข้อมูลทั่วไป');
+                            await saveSamples(samples); 
+                            renderDashboard(); 
+                        }
                     }
                 });
             });
@@ -886,24 +1162,191 @@
             $('#btn-manual-scan').click(function() { const val = $('#manual-scan-input').val().trim(); if (val) { if (html5QrcodeScanner && html5QrcodeScanner.isScanning) html5QrcodeScanner.stop(); $('#modal-scanner').addClass('hidden'); handleScanResult(val); } });
 
             function handleScanResult(sampleId) {
+                handleActionMenu(sampleId);
+            }
+
+            // Action Menu Variables and Handlers
+            let actionMenuSample = null;
+            let actionMenuQrInst = null;
+            function handleActionMenu(sampleId) {
                 const sample = getSamples().find(s => s.id === sampleId);
                 if (!sample) return Swal.fire({ title: 'ไม่พบรหัส!', icon: 'error', confirmButtonColor: '#009640' });
+                actionMenuSample = sample;
                 
+                $('#action-sample-info').html(`
+                    <strong>รหัส:</strong> <span class="font-mono">${sample.id}</span><br>
+                    <strong>ชื่อ:</strong> ${sample.name}<br>
+                    <strong>ประเภท:</strong> ${sample.type} | <strong>ABV:</strong> ${sample.degree}%<br>
+                    <strong>สถานะ:</strong> ${sample.status === 'withdrawn' ? '<span class="text-red-600">ตัดจ่ายออกแล้ว</span>' : sample.status === 'testing' ? '<span class="text-yellow-600">กำลังทดสอบ</span>' : '<span class="text-green-600">ปกติ (อยู่ในคลัง)</span>'}
+                `);
+                
+                $('#action-qr-container').empty();
+                actionMenuQrInst = new QRCode(document.getElementById('action-qr-container'), {
+                    text: sample.id, width: 128, height: 128, colorDark: "#000", colorLight: "#fff", correctLevel: QRCode.CorrectLevel.L
+                });
+                
+                $('#modal-action').removeClass('hidden');
+            }
+
+            $('#btn-action-lab').click(function() {
+                if(!actionMenuSample) return;
+                $('#modal-action').addClass('hidden');
+                $('#lab-sample-id').val(actionMenuSample.id);
+                $('#form-lab-result')[0].reset();
+                currentLabFileBase64 = null;
+                currentLabFileMime = null;
+                currentLabFileName = null;
+                $('#modal-lab-result').removeClass('hidden');
+            });
+
+            $('#btn-action-test').click(function() {
+                if(!actionMenuSample) return;
+                if(actionMenuSample.status === 'testing' || actionMenuSample.status === 'withdrawn') {
+                    return Swal.fire({title: 'ไม่สามารถทำรายการได้', text: 'ตัวอย่างนี้ไม่อยู่ในสถานะปกติ', icon: 'warning'});
+                }
                 Swal.fire({
-                    title: sample.name,
-                    html: `<div class="text-left text-sm bg-gray-50 p-3 mt-2 border"><p><strong>ABV:</strong> ${sample.degree}%</p><p><strong>อายุ:</strong> ${calculateAging(sample.collectionDate)}</p></div>`,
-                    showDenyButton: true, showCancelButton: true, confirmButtonText: 'บันทึกตรวจสอบ', denyButtonText: 'ลบออก', confirmButtonColor: '#009640'
-                }).then(async (res) => {
-                    if (res.isConfirmed) {
-                        let samples = getSamples(); const index = samples.findIndex(s => s.id === sampleId);
-                        samples[index].comment = (sample.comment ? sample.comment + '\n' : '') + `[${dayjs().format('DD/MM/YY HH:mm')}] ตรวจสอบแล้ว`;
-                        await saveSamples(samples); renderDashboard();
+                    title: 'ระบุเหตุผลการนำไปทดสอบ',
+                    input: 'text',
+                    inputPlaceholder: 'เช่น นำไปทำ Sensory Test ชั่วคราว',
+                    showCancelButton: true, confirmButtonText: 'ยืนยัน', confirmButtonColor: '#eab308'
+                }).then(async res => {
+                    if (res.isConfirmed && res.value) {
+                        let samples = getSamples();
+                        const index = samples.findIndex(s => s.id === actionMenuSample.id);
+                        samples[index].status = 'testing';
+                        addCustodyLog(samples[index], 'นำไปทดสอบ', currentUser?.username || 'System', `เหตุผล: ${res.value}`);
+                        await saveSamples(samples);
+                        renderDashboard();
+                        $('#modal-action').addClass('hidden');
                         Swal.fire({ title: 'บันทึกสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false });
-                    } else if (res.isDenied) {
-                        await saveSamples(getSamples().filter(s => s.id !== sampleId)); renderDashboard();
                     }
                 });
-            }
+            });
+
+            $('#btn-action-withdraw').click(function() {
+                if(!actionMenuSample) return;
+                if(actionMenuSample.status === 'withdrawn') {
+                    return Swal.fire({title: 'ถูกตัดจ่ายไปแล้ว', icon: 'warning'});
+                }
+                $('#modal-action').addClass('hidden');
+                $('.btn-delete[data-id="'+actionMenuSample.id+'"]').click();
+            });
+
+            let currentLabFileBase64 = null;
+            let currentLabFileMime = null;
+            let currentLabFileName = null;
+
+            $('#lab-file').on('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    currentLabFileName = file.name;
+                    currentLabFileMime = file.type;
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        currentLabFileBase64 = evt.target.result.split(',')[1];
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    currentLabFileBase64 = null;
+                    currentLabFileMime = null;
+                    currentLabFileName = null;
+                }
+            });
+
+            $('#form-lab-result').submit(async function(e) {
+                e.preventDefault();
+                const sampleId = $('#lab-sample-id').val();
+                let samples = getSamples(); 
+                const index = samples.findIndex(s => s.id === sampleId);
+                if (index !== -1) {
+                    if (!samples[index].labResults) samples[index].labResults = [];
+                    
+                    Swal.fire({ title: 'กำลังบันทึก...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+                    let fileUrl = null;
+                    if (currentLabFileBase64) {
+                        // Store locally as Data URL for fallback
+                        fileUrl = 'data:' + currentLabFileMime + ';base64,' + currentLabFileBase64;
+                    }
+
+                    const resultData = {
+                        color: $('#lab-color').val(),
+                        odor: $('#lab-odor').val(),
+                        taste: $('#lab-taste').val(),
+                        abv: $('#lab-abv').val(),
+                        ph: $('#lab-ph').val(),
+                        turbidity: $('#lab-turbidity').val(),
+                        file: currentLabFileName || '-',
+                        date: dayjs().format('YYYY-MM-DD HH:mm:ss')
+                    };
+                    
+                    samples[index].labResults.push(resultData);
+                    samples[index].comment = (samples[index].comment ? samples[index].comment + '\n' : '') + `[${dayjs().format('DD/MM/YY HH:mm')}] บันทึกผลตรวจวิเคราะห์`;
+                    
+                    addCustodyLog(samples[index], 'บันทึกผลแล็บ', currentUser?.username || 'System', `ABV:${resultData.abv}%, pH:${resultData.ph}, Turbidity:${resultData.turbidity}`, fileUrl);
+                    
+                    await saveSamples(samples); 
+                    
+                    // Attempt Google Drive upload in background if Apps Script is configured
+                    if (currentLabFileBase64 && SCRIPT_URL && SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+                        try {
+                            fetch(SCRIPT_URL, {
+                                method: 'POST',
+                                mode: 'no-cors',
+                                body: JSON.stringify({ action: 'uploadFile', filename: currentLabFileName, mimeType: currentLabFileMime, data: currentLabFileBase64 })
+                            }).catch(console.error);
+                        } catch (e) {}
+                    }
+
+                    renderDashboard();
+                    $('#modal-lab-result').addClass('hidden');
+                    Swal.fire({ title: 'บันทึกผลตรวจสอบสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false });
+                }
+            });
+
+            $(document).on('click', '.btn-history', function() {
+                const sampleId = $(this).data('id');
+                const sample = getSamples().find(s => s.id === sampleId);
+                if (!sample) return;
+                
+                const $content = $('#custody-history-content');
+                $content.empty();
+                
+                if (!sample.custodyLogs || sample.custodyLogs.length === 0) {
+                    $content.append('<div class="text-gray-500 text-center py-4">ยังไม่มีประวัติการเคลื่อนย้าย</div>');
+                } else {
+                    let logs = [];
+                    if (Array.isArray(sample.custodyLogs)) {
+                        logs = sample.custodyLogs;
+                    } else if (typeof sample.custodyLogs === 'string') {
+                        logs = [{ timestamp: sample.collectionDate || '-', action: sample.custodyLogs, user: 'System', details: '' }];
+                    } else if (sample.custodyLogs) {
+                        logs = [sample.custodyLogs]; // In case it's a single object
+                    }
+
+                    // Reverse to show newest first
+                    [...logs].reverse().forEach(log => {
+                        if (!log || typeof log !== 'object') return;
+                        
+                        const ts = log.timestamp || log.date || '-';
+                        const u = log.user || '-';
+                        const act = log.action || log.type || '-';
+                        const det = log.details || log.comment || '';
+
+                        $content.append(`
+                            <div class="border-l-2 border-tms-green pl-4 pb-4 relative">
+                                <div class="absolute w-3 h-3 bg-tms-green rounded-full -left-[7px] top-1"></div>
+                                <div class="text-xs text-gray-500 font-semibold mb-1">${ts} | ผู้ใช้: ${u}</div>
+                                <div class="font-bold text-gray-800">${act}</div>
+                                ${det ? `<div class="text-gray-600 mt-1">${det}</div>` : ''}
+                                ${log.fileUrl ? `<a href="${log.fileUrl}" target="_blank" download="lab-result" class="inline-flex items-center gap-1 mt-2 text-xs bg-tms-green hover:bg-green-700 text-white px-3 py-1.5 rounded transition-colors shadow-sm font-semibold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>เปิดดูไฟล์ / ดาวน์โหลด</a>` : ''}
+                            </div>
+                        `);
+                    });
+                }
+                
+                $('#modal-custody-history').removeClass('hidden');
+            });
 
             $('#btn-settings').click(function() {
                 Swal.fire({
