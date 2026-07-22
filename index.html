@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#009640">
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwOTY0MCI+PHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNU0yIDEybDEwIDUgMTAtNSIvPjwvc3ZnPg==">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwOTY0MCI+PHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNU0yIDEybDEwIDUgMTAtNSIvPjwvc3ZnPg==">
     <title>Library Management System</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -36,14 +39,21 @@
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css" rel="stylesheet">
 
     <style>
-        body { background-color: #ffffff; }
+        body {
+            background-color: #ffffff;
+        }
 
         .nav-btn {
             transition: all 0.2s ease;
             border-bottom: 4px solid transparent;
-            white-space: nowrap; /* สำคัญสำหรับมือถือไม่ให้ข้อความตกบรรทัด */
+            white-space: nowrap;
+            /* สำคัญสำหรับมือถือไม่ให้ข้อความตกบรรทัด */
         }
-        .nav-btn:hover { color: #111111; }
+
+        .nav-btn:hover {
+            color: #111111;
+        }
+
         .nav-btn.active {
             border-bottom-color: #009640;
             color: #009640;
@@ -51,8 +61,14 @@
         }
 
         /* ซ่อน Scrollbar สำหรับแถบเมนูในมือถือ */
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
 
         .tms-input {
             background: #ffffff;
@@ -62,44 +78,128 @@
             font-size: 0.875rem;
             color: #374151;
             transition: border-color 0.2s ease;
-            width: 100%; /* Default width for responsive */
+            width: 100%;
+            /* Default width for responsive */
         }
+
         .tms-input:focus {
             border-color: #009640;
             outline: none;
             box-shadow: 0 0 0 1px #009640;
         }
 
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
 
-        .fc-theme-standard .fc-scrollgrid, .fc-theme-standard td, .fc-theme-standard th { border-color: #E5E7EB !important; }
-        .fc-col-header-cell-cushion { color: #374151 !important; font-weight: 600; }
-        .fc-event { border-radius: 2px !important; border: none !important; padding: 2px 4px; font-size: 0.8em; }
-        .fc-day-today { background: rgba(0, 150, 64, 0.04) !important; }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .fc-theme-standard .fc-scrollgrid,
+        .fc-theme-standard td,
+        .fc-theme-standard th {
+            border-color: #E5E7EB !important;
+        }
+
+        .fc-col-header-cell-cushion {
+            color: #374151 !important;
+            font-weight: 600;
+        }
+
+        .fc-event {
+            border-radius: 2px !important;
+            border: none !important;
+            padding: 2px 4px;
+            font-size: 0.8em;
+        }
+
+        .fc-day-today {
+            background: rgba(0, 150, 64, 0.04) !important;
+        }
 
         @media print {
-            @page { size: A4; margin: 10mm; }
-            body { margin: 0; padding: 0; background: white; }
-            body > *:not(#modal-sticker) { display: none !important; }
-            #modal-sticker { position: static !important; display: block !important; background: transparent !important; }
-            #modal-sticker > div { position: static !important; transform: none !important; box-shadow: none !important; margin: 0 !important; padding: 0 !important; max-width: none !important; height: auto !important; max-height: none !important; overflow: visible !important; }
-            #modal-sticker > div > div:first-child { display: none !important; }
-            #print-area { position: static !important; overflow: visible !important; padding: 0 !important; border: none !important; height: auto !important; }
-            #print-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15mm; width: 100%; }
-            .sticker-item { border: 2px solid #333333 !important; padding: 1.5rem !important; background: white !important; color: black !important; }
+            @page {
+                size: A4;
+                margin: 10mm;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+
+            body>*:not(#modal-sticker) {
+                display: none !important;
+            }
+
+            #modal-sticker {
+                position: static !important;
+                display: block !important;
+                background: transparent !important;
+            }
+
+            #modal-sticker>div {
+                position: static !important;
+                transform: none !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                max-width: none !important;
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+            }
+
+            #modal-sticker>div>div:first-child {
+                display: none !important;
+            }
+
+            #print-area {
+                position: static !important;
+                overflow: visible !important;
+                padding: 0 !important;
+                border: none !important;
+                height: auto !important;
+            }
+
+            #print-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15mm;
+                width: 100%;
+            }
+
+            .sticker-item {
+                border: 2px solid #333333 !important;
+                padding: 1.5rem !important;
+                background: white !important;
+                color: black !important;
+            }
         }
     </style>
 </head>
+
 <body class="bg-white text-gray-800 min-h-screen relative overflow-x-hidden antialiased">
     <!-- Login Overlay -->
     <div id="login-overlay" class="fixed inset-0 z-[200] bg-white flex items-center justify-center hidden">
         <div class="w-full max-w-md p-6 bg-white border border-gray-200 shadow-xl rounded-lg mx-4">
             <div class="text-center mb-6">
                 <div class="w-16 h-16 bg-tms-green rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800">เข้าสู่ระบบ</h2>
                 <p class="text-sm text-gray-500 mt-1">Library Management System</p>
@@ -113,33 +213,45 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-1">รหัสผ่าน</label>
                     <input type="password" id="login-password" class="tms-input w-full" required>
                 </div>
-                <button type="submit" class="w-full bg-tms-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors shadow-sm mt-4">เข้าสู่ระบบ</button>
+                <button type="submit"
+                    class="w-full bg-tms-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors shadow-sm mt-4">เข้าสู่ระบบ</button>
             </form>
         </div>
     </div>
 
-    <header class="bg-tms-green text-white w-full fixed top-0 z-50 shadow-sm flex justify-between items-center px-4 md:px-6 py-2">
+    <header
+        class="bg-tms-green text-white w-full fixed top-0 z-50 shadow-sm flex justify-between items-center px-4 md:px-6 py-2">
         <div class="flex items-center gap-2 md:gap-3">
             <div class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 md:w-5 md:h-5 text-tms-green" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                <svg class="w-4 h-4 md:w-5 md:h-5 text-tms-green" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
             </div>
             <span class="text-lg md:text-xl font-bold tracking-wide truncate">Library Management System</span>
         </div>
         <div class="flex items-center gap-2 md:gap-4 text-sm">
-            
+
             <!-- Notification Bell with Glow and Material Effect -->
             <div class="relative">
-                <button id="btn-notifications" class="relative w-8 h-8 md:w-10 md:h-10 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                <button id="btn-notifications"
+                    class="relative w-8 h-8 md:w-10 md:h-10 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                        </path>
+                    </svg>
                     <!-- Glowing Badge -->
-                    <span id="notification-badge" class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,1)] hidden"></span>
+                    <span id="notification-badge"
+                        class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,1)] hidden"></span>
                 </button>
-                
+
                 <!-- Notification Dropdown (Glassmorphism / Visual Effect Material) -->
-                <div id="notification-dropdown" class="absolute right-0 mt-2 w-72 md:w-80 rounded-xl hidden z-50 overflow-hidden border border-white/30 shadow-[0_4px_30px_rgba(0,150,64,0.3)] bg-white/70 backdrop-blur-xl text-gray-800">
+                <div id="notification-dropdown"
+                    class="absolute right-0 mt-2 w-72 md:w-80 rounded-xl hidden z-50 overflow-hidden border border-white/30 shadow-[0_4px_30px_rgba(0,150,64,0.3)] bg-white/70 backdrop-blur-xl text-gray-800">
                     <div class="p-3 border-b border-gray-200/50 bg-white/40 flex justify-between items-center">
                         <h3 class="font-bold text-gray-800 text-base">Upcoming Checks</h3>
-                        <span class="text-xs bg-tms-green/10 text-tms-green px-2 py-1 rounded-full font-semibold">14 วันถัดไป</span>
+                        <span class="text-xs bg-tms-green/10 text-tms-green px-2 py-1 rounded-full font-semibold">14
+                            วันถัดไป</span>
                     </div>
                     <div id="notification-list" class="max-h-80 overflow-y-auto p-2 space-y-2">
                         <!-- Items injected by JS -->
@@ -151,30 +263,41 @@
                 <div class="font-bold" id="header-user-name">เจ้าหน้าที่ชำนาญการ</div>
                 <div class="text-xs text-green-200" id="header-user-role">ฝ่ายพัฒนาและการปรุงสุรา</div>
             </div>
-            <button id="btn-logout" class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-red-100 hover:bg-red-200 border-2 border-white overflow-hidden flex-shrink-0 flex items-center justify-center transition-colors" title="ออกจากระบบ">
-                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            <button id="btn-logout"
+                class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-red-100 hover:bg-red-200 border-2 border-white overflow-hidden flex-shrink-0 flex items-center justify-center transition-colors"
+                title="ออกจากระบบ">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                    </path>
+                </svg>
             </button>
         </div>
     </header>
 
-    <nav class="bg-tms-light w-full fixed top-11 md:top-14 z-40 border-b border-tms-border px-4 md:px-6 flex gap-4 md:gap-6 h-12 items-end overflow-x-auto hide-scrollbar">
+    <nav
+        class="bg-tms-light w-full fixed top-11 md:top-14 z-40 border-b border-tms-border px-4 md:px-6 flex gap-4 md:gap-6 h-12 items-end overflow-x-auto hide-scrollbar">
         <button class="nav-btn active pb-2 px-2 text-gray-700 font-semibold" data-target="dashboard">หน้าแรก</button>
-        <button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="add-sample">เพิ่มตัวอย่างสุรา</button>
+        <button class="nav-btn pb-2 px-2 text-gray-700 font-semibold"
+            data-target="add-sample">เพิ่มตัวอย่างสุรา</button>
         <button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="locations">สถานที่จัดเก็บ</button>
         <button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="calendar">ปฏิทินรอบตรวจสอบ</button>
-	<button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="history">ประวัติเบิกจ่าย (History)</button>
+        <button class="nav-btn pb-2 px-2 text-gray-700 font-semibold" data-target="history">ประวัติเบิกจ่าย
+            (History)</button>
     </nav>
 
     <main class="pt-28 md:pt-32 pb-12 px-4 md:px-6 max-w-[1400px] mx-auto h-full">
-        
+
         <section id="view-dashboard" class="view-section active">
             <div class="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-6 gap-4">
                 <div class="w-full xl:w-auto">
-                    <h1 class="text-lg md:text-xl font-bold text-gray-800">ข้อมูลสรุปจำนวนตัวอย่างคลังสุราแยกตามที่จัดเก็บ</h1>
+                    <h1 class="text-lg md:text-xl font-bold text-gray-800">
+                        ข้อมูลสรุปจำนวนตัวอย่างคลังสุราแยกตามที่จัดเก็บ</h1>
                     <p class="text-xs text-gray-500 mt-1">แสดงสถานะภาพรวมและอายุตัวอย่างในห้องจัดเก็บ</p>
                 </div>
                 <div class="flex flex-col md:flex-row flex-wrap items-stretch md:items-center gap-3 w-full xl:w-auto">
-                    <input type="text" id="search-input" placeholder="ค้นหารหัส หรือ Rotation No..." class="tms-input md:w-64">
+                    <input type="text" id="search-input" placeholder="ค้นหารหัส หรือ Rotation No..."
+                        class="tms-input md:w-64">
                     <div class="flex flex-col sm:flex-row gap-3 flex-1">
                         <select id="filter-room" class="tms-input flex-1 min-w-[120px]">
                             <option value="all">ทุกสถานที่เก็บ</option>
@@ -187,7 +310,8 @@
                             <option value="asc">ใหม่สุดก่อน</option>
                         </select>
                     </div>
-                    <button class="btn-clear-filters text-sm text-red-600 hover:underline font-semibold text-right md:text-left">ล้างตัวกรอง</button>
+                    <button
+                        class="btn-clear-filters text-sm text-red-600 hover:underline font-semibold text-right md:text-left">ล้างตัวกรอง</button>
                 </div>
             </div>
 
@@ -195,7 +319,9 @@
 
             <h2 class="text-base font-bold text-gray-800 mt-2 mb-3">การวิเคราะห์ปตัวอย่างในคลังสุราแยกสัดส่วน</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div class="border border-tms-border p-4 bg-white rounded flex justify-center"><div class="w-full max-w-[220px]"><canvas id="chart-type"></canvas></div></div>
+                <div class="border border-tms-border p-4 bg-white rounded flex justify-center">
+                    <div class="w-full max-w-[220px]"><canvas id="chart-type"></canvas></div>
+                </div>
                 <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-room"></canvas></div>
                 <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-abv"></canvas></div>
                 <div class="border border-tms-border p-4 bg-white rounded"><canvas id="chart-trend"></canvas></div>
@@ -204,18 +330,32 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 gap-4">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full md:w-auto">
                     <h2 class="text-base font-bold text-gray-800">รายการตัวอย่างสุรา</h2>
-                    <button id="btn-print-selected" class="w-full sm:w-auto bg-tms-green hover:bg-green-700 text-white text-xs font-semibold px-4 py-2 rounded-full flex justify-center items-center gap-1.5 transition-colors shadow-sm">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    <button id="btn-print-selected"
+                        class="w-full sm:w-auto bg-tms-green hover:bg-green-700 text-white text-xs font-semibold px-4 py-2 rounded-full flex justify-center items-center gap-1.5 transition-colors shadow-sm">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+                            </path>
+                        </svg>
                         พิมพ์สติ๊กเกอร์รายการที่เลือก
                     </button>
                 </div>
                 <div class="flex flex-wrap items-center gap-4 w-full md:w-auto justify-between md:justify-end">
-                    <button id="btn-scan" class="text-tms-green hover:underline text-sm flex items-center gap-1 font-semibold">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                    <button id="btn-scan"
+                        class="text-tms-green hover:underline text-sm flex items-center gap-1 font-semibold">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z">
+                            </path>
+                        </svg>
                         สแกน QR Code
                     </button>
                     <button id="btn-settings" class="text-gray-500 hover:text-gray-800 text-sm flex items-center gap-1">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                            </path>
+                        </svg>
                         ตั้งค่าข้อมูล
                     </button>
                 </div>
@@ -227,7 +367,8 @@
                         <thead class="bg-tms-dark text-white">
                             <tr>
                                 <th class="p-3 w-12 text-center whitespace-nowrap">
-                                    <input type="checkbox" id="check-all-samples" class="w-4 h-4 rounded border-gray-300">
+                                    <input type="checkbox" id="check-all-samples"
+                                        class="w-4 h-4 rounded border-gray-300">
                                 </th>
                                 <th class="p-3 font-normal whitespace-nowrap">รหัสเอกสารตัวอย่าง</th>
                                 <th class="p-3 font-normal min-w-[150px]">Rotation No. / ชื่อรายการ</th>
@@ -248,26 +389,32 @@
             <div class="flex flex-col sm:flex-row justify-between items-center mt-4 gap-4">
                 <div class="text-xs text-gray-500 font-medium" id="pagination-info">Showing 0-0 of 0 items</div>
                 <div class="flex gap-2 sm:gap-4 text-sm items-center font-semibold overflow-x-auto hide-scrollbar">
-                    <button id="btn-prev-page" class="text-gray-500 hover:text-black disabled:opacity-30 whitespace-nowrap">ก่อนหน้า</button>
+                    <button id="btn-prev-page"
+                        class="text-gray-500 hover:text-black disabled:opacity-30 whitespace-nowrap">ก่อนหน้า</button>
                     <div id="pagination-numbers" class="flex gap-1"></div>
-                    <button id="btn-next-page" class="text-tms-green hover:text-green-800 disabled:opacity-30 whitespace-nowrap">ถัดไป</button>
+                    <button id="btn-next-page"
+                        class="text-tms-green hover:text-green-800 disabled:opacity-30 whitespace-nowrap">ถัดไป</button>
                 </div>
             </div>
         </section>
 
         <section id="view-add-sample" class="view-section hidden">
-            <h1 class="text-lg md:text-xl font-bold text-gray-800 mb-4 md:mb-6 border-b pb-2">ลงทะเบียนตัวอย่างสุราใหม่</h1>
+            <h1 class="text-lg md:text-xl font-bold text-gray-800 mb-4 md:mb-6 border-b pb-2">ลงทะเบียนตัวอย่างสุราใหม่
+            </h1>
             <div class="bg-white border border-tms-border p-4 md:p-6 max-w-4xl mx-auto shadow-sm rounded-sm">
                 <form id="form-add-sample" class="space-y-4">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex flex-col">
-                            <label class="text-sm font-semibold mb-1 text-gray-700">Rotation No. / ชื่อตัวอย่าง <span class="text-red-500">*</span></label>
+                            <label class="text-sm font-semibold mb-1 text-gray-700">Rotation No. / ชื่อตัวอย่าง <span
+                                    class="text-red-500">*</span></label>
                             <input type="text" name="name" required class="tms-input">
                         </div>
                         <div class="flex flex-col">
                             <div class="flex justify-between items-center mb-1">
-                                <label class="text-sm font-semibold text-gray-700">ประเภทตัวอย่าง <span class="text-red-500">*</span></label>
-                                <button type="button" id="btn-manage-types" class="text-xs text-blue-600 hover:underline font-semibold">บริหารประเภท</button>
+                                <label class="text-sm font-semibold text-gray-700">ประเภทตัวอย่าง <span
+                                        class="text-red-500">*</span></label>
+                                <button type="button" id="btn-manage-types"
+                                    class="text-xs text-blue-600 hover:underline font-semibold">บริหารประเภท</button>
                             </div>
                             <select name="type" id="sample-type-select" required class="tms-input"></select>
                         </div>
@@ -275,22 +422,26 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex flex-col">
-                            <label class="text-sm font-semibold mb-1 text-gray-700">ความเข้มข้นแอลกอฮอล์ (ABV %) <span class="text-red-500">*</span></label>
+                            <label class="text-sm font-semibold mb-1 text-gray-700">ความเข้มข้นแอลกอฮอล์ (ABV %) <span
+                                    class="text-red-500">*</span></label>
                             <input type="number" step="0.1" name="degree" required class="tms-input">
                         </div>
                         <div class="flex flex-col">
-                            <label class="text-sm font-semibold mb-1 text-gray-700">ผู้จัดเก็บตัวอย่าง <span class="text-red-500">*</span></label>
+                            <label class="text-sm font-semibold mb-1 text-gray-700">ผู้จัดเก็บตัวอย่าง <span
+                                    class="text-red-500">*</span></label>
                             <input type="text" name="proprietor" required class="tms-input">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex flex-col">
-                            <label class="text-sm font-semibold mb-1 text-gray-700">วันที่เริ่มต้นจัดเก็บตัวอย่าง <span class="text-red-500">*</span></label>
+                            <label class="text-sm font-semibold mb-1 text-gray-700">วันที่เริ่มต้นจัดเก็บตัวอย่าง <span
+                                    class="text-red-500">*</span></label>
                             <input type="date" name="collectionDate" required class="tms-input">
                         </div>
                         <div class="flex flex-col">
-                            <label class="text-sm font-semibold mb-1 text-gray-700">ห้องเก็บรักษาผลิตภัณฑ์ <span class="text-red-500">*</span></label>
+                            <label class="text-sm font-semibold mb-1 text-gray-700">ห้องเก็บรักษาผลิตภัณฑ์ <span
+                                    class="text-red-500">*</span></label>
                             <select name="locationId" id="location-select" required class="tms-input"></select>
                         </div>
                     </div>
@@ -298,7 +449,8 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex flex-col">
                             <label class="text-sm font-semibold mb-1 text-gray-600">ระยะเวลาที่จัดเก็บแบบ Live</label>
-                            <div class="tms-input font-bold bg-tms-light text-tms-green border-gray-300 flex items-center h-[38px] md:h-[42px]" id="live-aging">0 วัน</div>
+                            <div class="tms-input font-bold bg-tms-light text-tms-green border-gray-300 flex items-center h-[38px] md:h-[42px]"
+                                id="live-aging">0 วัน</div>
                         </div>
                         <div class="flex flex-col">
                             <label class="text-sm font-semibold mb-1 text-gray-600">หมายเหตุกระบวนการผลิต</label>
@@ -308,15 +460,20 @@
 
                     <div class="grid grid-cols-1 gap-4 border-t border-dashed pt-3 mt-2">
                         <div class="flex flex-col">
-                            <label class="text-sm font-bold mb-1 text-tms-green">จำนวนตัวอย่างที่ต้องการจัดเก็บ (ขวด) <span class="text-red-500">*</span></label>
-                            <input type="number" name="quantity" min="1" max="100" value="1" required class="tms-input border-tms-green bg-green-50">
-                            <p class="text-[10px] text-gray-500 mt-1">ระบบจะรันรหัส ID และสร้าง QR Code แยกให้แต่ละขวดโดยอัตโนมัติหากใส่ค่ามากกว่า 1</p>
+                            <label class="text-sm font-bold mb-1 text-tms-green">จำนวนตัวอย่างที่ต้องการจัดเก็บ (ขวด)
+                                <span class="text-red-500">*</span></label>
+                            <input type="number" name="quantity" min="1" max="100" value="1" required
+                                class="tms-input border-tms-green bg-green-50">
+                            <p class="text-[10px] text-gray-500 mt-1">ระบบจะรันรหัส ID และสร้าง QR Code
+                                แยกให้แต่ละขวดโดยอัตโนมัติหากใส่ค่ามากกว่า 1</p>
                         </div>
                     </div>
 
                     <div class="flex flex-col-reverse sm:flex-row justify-end pt-4 border-t border-gray-100 gap-3">
-                        <button type="button" class="w-full sm:w-auto px-5 py-2 border border-gray-300 text-gray-600 rounded text-sm font-semibold hover:bg-gray-50 text-center">ล้างฟอร์ม</button>
-                        <button type="submit" class="w-full sm:w-auto bg-tms-green text-white font-semibold py-2 px-6 rounded text-sm hover:bg-green-700 shadow-sm text-center">บันทึกข้อมูลเข้า Sheet</button>
+                        <button type="button"
+                            class="w-full sm:w-auto px-5 py-2 border border-gray-300 text-gray-600 rounded text-sm font-semibold hover:bg-gray-50 text-center">ล้างฟอร์ม</button>
+                        <button type="submit"
+                            class="w-full sm:w-auto bg-tms-green text-white font-semibold py-2 px-6 rounded text-sm hover:bg-green-700 shadow-sm text-center">บันทึกข้อมูล</button>
                     </div>
                 </form>
             </div>
@@ -328,9 +485,12 @@
                     <h1 class="text-lg md:text-xl font-bold text-gray-800">ระบบบริหารสถานที่จัดวางถังและชั้นบ่มสุรา</h1>
                     <p class="text-xs text-gray-500 mt-1">แสดงพื้นที่จัดเก็บทั้งหมดในระบบ</p>
                 </div>
-                <button id="btn-add-location" class="w-full sm:w-auto bg-tms-green text-white rounded-full px-4 py-2 text-xs font-semibold hover:bg-green-700 transition-colors shadow-sm">+ เพิ่มสถานที่จัดเก็บใหม่</button>
+                <button id="btn-add-location"
+                    class="w-full sm:w-auto bg-tms-green text-white rounded-full px-4 py-2 text-xs font-semibold hover:bg-green-700 transition-colors shadow-sm">+
+                    เพิ่มสถานที่จัดเก็บใหม่</button>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4" id="locations-grid"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4" id="locations-grid">
+            </div>
         </section>
 
         <section id="view-calendar" class="view-section hidden">
@@ -343,7 +503,8 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-4 border-b pb-2 gap-3">
                 <div>
                     <h1 class="text-lg md:text-xl font-bold text-gray-800">ประวัติการเบิกและตัดรายการตัวอย่างสุรา</h1>
-                    <p class="text-xs text-gray-500 mt-1">Audit Trail: ตรวจสอบประวัติการนำตัวอย่างออกจากพื้นที่จัดเก็บ</p>
+                    <p class="text-xs text-gray-500 mt-1">Audit Trail: ตรวจสอบประวัติการนำตัวอย่างออกจากพื้นที่จัดเก็บ
+                    </p>
                 </div>
             </div>
 
@@ -366,31 +527,44 @@
         </section>
     </main>
 
-    <div id="modal-scanner" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/60 backdrop-blur-sm p-4">
+    <div id="modal-scanner"
+        class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/60 backdrop-blur-sm p-4">
         <div class="bg-white rounded p-4 md:p-6 w-full max-w-md shadow-xl relative">
             <button class="absolute top-4 right-4 text-gray-400 hover:text-red-500" id="close-scanner">
-                <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
             </button>
             <h2 class="text-base font-bold text-gray-800 mb-3 border-b pb-1.5 pr-8">สแกนรหัสคิวอาร์โค้ดประจำถัง</h2>
-            <div id="qr-reader" class="w-full bg-black rounded overflow-hidden flex items-center justify-center" style="min-height: 250px; aspect-ratio: 1/1;"></div>
+            <div id="qr-reader" class="w-full bg-black rounded overflow-hidden flex items-center justify-center"
+                style="min-height: 250px; aspect-ratio: 1/1;"></div>
             <div class="mt-4 text-center">
                 <p class="text-xs text-gray-400 mb-2">หรือป้อนรหัส ID เอกสารด้วยตนเอง</p>
                 <div class="flex gap-2">
-                    <input type="text" id="manual-scan-input" placeholder="ตัวอย่างเช่น id_xxxxxxxxx" class="tms-input flex-1">
-                    <button id="btn-manual-scan" class="bg-tms-green hover:bg-green-700 text-white px-4 py-2 rounded text-xs font-bold transition-colors">ค้นหา</button>
+                    <input type="text" id="manual-scan-input" placeholder="ตัวอย่างเช่น id_xxxxxxxxx"
+                        class="tms-input flex-1">
+                    <button id="btn-manual-scan"
+                        class="bg-tms-green hover:bg-green-700 text-white px-4 py-2 rounded text-xs font-bold transition-colors">ค้นหา</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="modal-sticker" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/60 p-2 md:p-6">
+    <div id="modal-sticker"
+        class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/60 p-2 md:p-6">
         <div class="bg-white rounded p-4 md:p-6 w-full max-w-4xl max-h-[95vh] shadow-2xl flex flex-col relative">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-2 border-b gap-3 pr-8">
+            <div
+                class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-2 border-b gap-3 pr-8">
                 <h2 class="text-base md:text-lg font-bold text-gray-800">แผ่นสติ๊กเกอร์ติดข้างขวด (A4 มาตรฐาน)</h2>
-                <button id="btn-print-sticker" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded text-xs">สั่งพิมพ์ออกเครื่อง</button>
+                <button id="btn-print-sticker"
+                    class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded text-xs">สั่งพิมพ์ออกเครื่อง</button>
             </div>
             <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-red-500 p-1">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
             </button>
             <div id="print-area" class="bg-gray-100 overflow-y-auto p-2 md:p-4 border rounded flex-1">
                 <div id="print-grid"></div>
@@ -405,20 +579,26 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <!-- Action Menu Modal -->
     <div id="modal-action" class="fixed inset-0 z-[160] flex items-center justify-center hidden bg-black/60 p-4">
         <div class="bg-white rounded p-4 md:p-6 w-full max-w-sm shadow-xl relative text-center">
             <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-red-500">
-                <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
             </button>
             <h2 class="text-lg font-bold text-gray-800 mb-2">จัดการตัวอย่าง</h2>
             <div id="action-qr-container" class="flex justify-center mb-3"></div>
             <p id="action-sample-info" class="text-sm text-gray-600 mb-4 bg-gray-50 p-2 border rounded"></p>
             <div class="flex flex-col gap-2">
-                <button id="btn-action-lab" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors text-sm">บันทึกผลแล็บ</button>
-                <button id="btn-action-test" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded transition-colors text-sm">นำมาทดสอบ</button>
-                <button id="btn-action-withdraw" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors text-sm">ตัดจ่ายออก</button>
+                <button id="btn-action-lab"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors text-sm">บันทึกผลแล็บ</button>
+                <button id="btn-action-test"
+                    class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded transition-colors text-sm">นำมาทดสอบ</button>
+                <button id="btn-action-withdraw"
+                    class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors text-sm">ตัดจ่ายออก</button>
             </div>
         </div>
     </div>
@@ -427,39 +607,67 @@
     <div id="modal-lab-result" class="fixed inset-0 z-[150] flex items-center justify-center hidden bg-black/60 p-4">
         <div class="bg-white rounded p-4 md:p-6 w-full max-w-lg shadow-xl relative max-h-[90vh] overflow-y-auto">
             <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-red-500">
-                <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
             </button>
             <h2 class="text-base font-bold text-gray-800 mb-3 border-b pb-1.5 pr-8">บันทึกผลการตรวจวิเคราะห์</h2>
             <form id="form-lab-result" class="space-y-4">
                 <input type="hidden" id="lab-sample-id">
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">สี (Color)</label><input type="text" id="lab-color" class="tms-input w-full" required></div>
-                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">กลิ่น (Odor)</label><input type="text" id="lab-odor" class="tms-input w-full" required></div>
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">สี (Color)</label><input
+                            type="text" id="lab-color" class="tms-input w-full" required></div>
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">กลิ่น (Odor)</label><input
+                            type="text" id="lab-odor" class="tms-input w-full" required></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">รสชาติ (Taste)</label><input type="text" id="lab-taste" class="tms-input w-full" required></div>
-                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">ค่า ABV (%)</label><input type="number" step="0.1" id="lab-abv" class="tms-input w-full" required></div>
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">รสชาติ (Taste)</label><input
+                            type="text" id="lab-taste" class="tms-input w-full" required></div>
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">ค่า ABV (%)</label><input
+                            type="number" step="0.1" id="lab-abv" class="tms-input w-full" required></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">ค่า pH</label><input type="number" step="0.1" id="lab-ph" class="tms-input w-full" required></div>
-                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">ความขุ่น (Turbidity)</label><input type="text" id="lab-turbidity" class="tms-input w-full" required></div>
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">ค่า pH</label><input
+                            type="number" step="0.1" id="lab-ph" class="tms-input w-full" required></div>
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">ความขุ่น
+                            (Turbidity)</label><input type="text" id="lab-turbidity" class="tms-input w-full" required>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">Aldehyde</label><input
+                            type="text" id="lab-aldehyde" class="tms-input w-full"></div>
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">%Acid</label><input type="text"
+                            id="lab-acid" class="tms-input w-full"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">Fusel oil</label><input
+                            type="text" id="lab-fusel-oil" class="tms-input w-full"></div>
+                    <div><label class="block text-sm font-semibold text-gray-700 mb-1">Ester</label><input type="text"
+                            id="lab-ester" class="tms-input w-full"></div>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1">ไฟล์ผลวิเคราะห์ (แนบรูป/PDF)</label>
                     <input type="file" id="lab-file" class="tms-input w-full text-sm">
                 </div>
-                <button type="submit" class="w-full bg-tms-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors shadow-sm">บันทึกผลตรวจสอบ</button>
+                <button type="submit"
+                    class="w-full bg-tms-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors shadow-sm">บันทึกผลตรวจสอบ</button>
             </form>
         </div>
     </div>
 
     <!-- Chain of Custody History Modal -->
-    <div id="modal-custody-history" class="fixed inset-0 z-[150] flex items-center justify-center hidden bg-black/60 p-4">
+    <div id="modal-custody-history"
+        class="fixed inset-0 z-[150] flex items-center justify-center hidden bg-black/60 p-4">
         <div class="bg-white rounded p-4 md:p-6 w-full max-w-2xl shadow-xl relative max-h-[90vh] flex flex-col">
             <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-red-500">
-                <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
             </button>
-            <h2 class="text-base font-bold text-gray-800 mb-3 border-b pb-1.5 pr-8">ประวัติและการเคลื่อนย้าย (Chain of Custody)</h2>
+            <h2 class="text-base font-bold text-gray-800 mb-3 border-b pb-1.5 pr-8">ประวัติและการเคลื่อนย้าย (Chain of
+                Custody)</h2>
             <div id="custody-history-content" class="overflow-y-auto flex-1 text-sm space-y-4">
             </div>
         </div>
@@ -478,15 +686,15 @@
         function getTypes() { return liquor_types; }
 
         function generateId() { return 'id_' + Math.random().toString(36).substr(2, 9); }
-        
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
             });
         }
-        
+
         let currentUser = JSON.parse(localStorage.getItem('lms_user') || 'null');
-        
+
         function addCustodyLog(sample, action, user, details, fileUrl = null) {
             if (!sample.custodyLogs) sample.custodyLogs = [];
             sample.custodyLogs.push({
@@ -526,11 +734,11 @@
                 liquor_samples = result.samples || [];
                 liquor_locations = result.locations || [];
                 liquor_types = result.types || [];
-                
+
                 localStorage.setItem('liquor_samples_db', JSON.stringify(liquor_samples));
                 localStorage.setItem('liquor_locations_db', JSON.stringify(liquor_locations));
                 localStorage.setItem('liquor_types_db', JSON.stringify(liquor_types));
-                
+
                 if (!silent && typeof Swal !== 'undefined') Swal.close();
                 return true;
             } catch (e) {
@@ -548,19 +756,19 @@
         async function saveSamples(samples) {
             liquor_samples = samples; localStorage.setItem('liquor_samples_db', JSON.stringify(samples));
             if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') return;
-            try { await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'saveSamples', data: samples }) }); } catch(e) {}
+            try { await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'saveSamples', data: samples }) }); } catch (e) { }
         }
 
         async function saveLocations(locations) {
             liquor_locations = locations; localStorage.setItem('liquor_locations_db', JSON.stringify(locations));
             if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') return;
-            try { await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'saveLocations', data: locations }) }); } catch(e) {}
+            try { await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'saveLocations', data: locations }) }); } catch (e) { }
         }
 
         async function saveTypes(types) {
             liquor_types = types; localStorage.setItem('liquor_types_db', JSON.stringify(types));
             if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') return;
-            try { await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'saveTypes', data: types }) }); } catch(e) {}
+            try { await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'saveTypes', data: types }) }); } catch (e) { }
         }
 
         function calculateAging(startDateStr) {
@@ -590,7 +798,7 @@
                 if (s.status === 'withdrawn') return;
                 let baseDate = dayjs(s.collectionDate);
                 const withdrawDay = s.withdrawDate ? dayjs(s.withdrawDate) : null;
-                
+
                 for (let i = 1; i <= 10; i++) {
                     const eventDate = baseDate.add(6 * i, 'month');
                     if (s.status === 'withdrawn' && eventDate.isAfter(withdrawDay, 'day')) {
@@ -636,7 +844,7 @@
             }
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Login Logic
             if (!currentUser) {
                 $('#login-overlay').removeClass('hidden');
@@ -644,7 +852,7 @@
                 updateUserHeader();
             }
 
-            $('#form-login').submit(function(e) {
+            $('#form-login').submit(function (e) {
                 e.preventDefault();
                 const u = $('#login-username').val().trim();
                 const p = $('#login-password').val().trim();
@@ -658,13 +866,13 @@
                 }
             });
 
-            $('#btn-logout').click(function() {
+            $('#btn-logout').click(function () {
                 localStorage.removeItem('lms_user');
                 location.reload();
             });
 
             function updateUserHeader() {
-                if(!currentUser) return;
+                if (!currentUser) return;
                 $('#header-user-name').text(currentUser.username);
                 $('#header-user-role').text(currentUser.role === 'Admin' ? 'ผู้ดูแลระบบ (Admin)' : 'พนักงานปฏิบัติการ (Operator)');
                 if (currentUser.role !== 'Admin') {
@@ -676,15 +884,15 @@
                 }
             }
 
-            $('#btn-notifications').click(function(e) {
+            $('#btn-notifications').click(function (e) {
                 e.stopPropagation();
                 $('#notification-dropdown').toggleClass('hidden');
                 if (!$('#notification-dropdown').hasClass('hidden')) {
                     updateUpcomingNotifications();
                 }
             });
-            
-            $(document).click(function(e) {
+
+            $(document).click(function (e) {
                 if (!$(e.target).closest('#btn-notifications, #notification-dropdown').length) {
                     $('#notification-dropdown').addClass('hidden');
                 }
@@ -694,7 +902,7 @@
 
             syncAllData().then(() => { populateTypes(); renderDashboard(); });
 
-            $('.nav-btn').click(function() {
+            $('.nav-btn').click(function () {
                 const target = $(this).data('target');
                 $('.nav-btn').removeClass('active'); $(this).addClass('active');
                 $('.view-section').addClass('hidden'); $(`#view-${target}`).removeClass('hidden');
@@ -723,7 +931,7 @@
                 if (currentSelectVal && types.includes(currentSelectVal)) $select.val(currentSelectVal);
             }
 
-            $('#btn-manage-types').click(function() {
+            $('#btn-manage-types').click(function () {
                 const types = getTypes();
                 let typesHtml = types.map((t, index) => `
                     <div class="flex justify-between items-center mb-2 bg-gray-50 p-2 border text-xs">
@@ -739,11 +947,11 @@
                     showConfirmButton: true, confirmButtonText: 'เสร็จสิ้น', confirmButtonColor: '#009640',
                     width: window.innerWidth < 768 ? '90%' : '400px', // Responsive SWAL
                     didOpen: () => {
-                        $('#btn-add-type').click(async function() {
+                        $('#btn-add-type').click(async function () {
                             const newType = $('#new-type-input').val().trim();
                             if (newType && !types.includes(newType)) { types.push(newType); await saveTypes(types); Swal.close(); $('#btn-manage-types').click(); populateTypes(); }
                         });
-                        $('.btn-delete-type').click(async function() {
+                        $('.btn-delete-type').click(async function () {
                             const idx = $(this).data('index'); types.splice(idx, 1); await saveTypes(types); Swal.close(); $('#btn-manage-types').click(); populateTypes();
                         });
                     }
@@ -760,8 +968,8 @@
                 locations.forEach(loc => {
                     const roomName = getRoomName(loc.name);
                     if (!roomsMap[roomName]) roomsMap[roomName] = { count: 0 };
-                // เพิ่มเงื่อนไข s.status !== 'withdrawn' เพื่อไม่นับถังที่ถูกตัดสต๊อก
-                roomsMap[roomName].count += samples.filter(s => s.locationId === loc.id && s.status !== 'withdrawn').length;
+                    // เพิ่มเงื่อนไข s.status !== 'withdrawn' เพื่อไม่นับถังที่ถูกตัดสต๊อก
+                    roomsMap[roomName].count += samples.filter(s => s.locationId === loc.id && s.status !== 'withdrawn').length;
                 });
 
                 const currentRoomVal = $('#filter-room').val();
@@ -771,7 +979,7 @@
 
                 const $zones = $('#zones-container'); $zones.empty();
                 const uiPalette = ['bg-[#009640]', 'bg-[#5C5C9A]', 'bg-[#D2B48C]', 'bg-[#A8D08D]', 'bg-[#E2C2C2]', 'bg-[#708090]'];
-                
+
                 Object.keys(roomsMap).forEach((room, index) => {
                     const colorHex = uiPalette[index % uiPalette.length];
                     $zones.append(`
@@ -793,7 +1001,7 @@
                 });
 
                 const sortDir = $('#sort-duration').val() || 'desc';
-                filtered.sort((a,b) => { const dateA = new Date(a.collectionDate); const dateB = new Date(b.collectionDate); return sortDir === 'desc' ? dateB - dateA : dateA - dateB; });
+                filtered.sort((a, b) => { const dateA = new Date(a.collectionDate); const dateB = new Date(b.collectionDate); return sortDir === 'desc' ? dateB - dateA : dateA - dateB; });
 
                 const totalItems = filtered.length; const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
                 if (currentPage > totalPages) currentPage = totalPages;
@@ -803,8 +1011,8 @@
                 $('#btn-prev-page').prop('disabled', currentPage === 1); $('#btn-next-page').prop('disabled', currentPage === totalPages);
 
                 const $pageNumContainer = $('#pagination-numbers'); $pageNumContainer.empty();
-                for(let i=1; i<=totalPages; i++) {
-                    if(i === currentPage) $pageNumContainer.append(`<span class="w-6 h-6 flex items-center justify-center bg-[#009640] text-white rounded text-xs font-bold shadow-sm">${i}</span>`);
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === currentPage) $pageNumContainer.append(`<span class="w-6 h-6 flex items-center justify-center bg-[#009640] text-white rounded text-xs font-bold shadow-sm">${i}</span>`);
                     else $pageNumContainer.append(`<button class="w-6 h-6 flex items-center justify-center text-gray-500 text-xs page-num-btn border rounded hover:bg-gray-50" data-page="${i}">${i}</button>`);
                 }
 
@@ -852,7 +1060,7 @@
 
                 if (samples.length === 0) return;
                 const typesCount = {}; samples.forEach(s => { typesCount[s.type] = (typesCount[s.type] || 0) + 1; });
-                
+
                 chartTypeInst = new Chart(document.getElementById('chart-type'), {
                     type: 'doughnut',
                     data: { labels: Object.keys(typesCount), datasets: [{ data: Object.values(typesCount), backgroundColor: ['#009640', '#5C5C9A', '#D2B48C', '#A8D08D', '#708090'] }] },
@@ -880,13 +1088,13 @@
             }
 
             // Events
-            $(document).on('click', '.room-card', function() { $('#filter-room').val($(this).data('room')).trigger('change'); });
+            $(document).on('click', '.room-card', function () { $('#filter-room').val($(this).data('room')).trigger('change'); });
             $('#search-input, #filter-type, #filter-room, #sort-duration').on('input change', () => { currentPage = 1; renderDashboard(); });
-            $('.btn-clear-filters').click(function() { $('#search-input').val(''); $('#filter-type, #filter-room').val('all'); $('#sort-duration').val('desc'); currentPage = 1; renderDashboard(); });
-            $(document).on('click', '.page-num-btn', function() { currentPage = $(this).data('page'); renderDashboard(); });
-            $('#btn-prev-page').click(function() { if (currentPage > 1) { currentPage--; renderDashboard(); } });
-            $('#btn-next-page').click(function() { currentPage++; renderDashboard(); });
-            $('#check-all-samples').change(function() { $('.sample-checkbox').prop('checked', $(this).prop('checked')); });
+            $('.btn-clear-filters').click(function () { $('#search-input').val(''); $('#filter-type, #filter-room').val('all'); $('#sort-duration').val('desc'); currentPage = 1; renderDashboard(); });
+            $(document).on('click', '.page-num-btn', function () { currentPage = $(this).data('page'); renderDashboard(); });
+            $('#btn-prev-page').click(function () { if (currentPage > 1) { currentPage--; renderDashboard(); } });
+            $('#btn-next-page').click(function () { currentPage++; renderDashboard(); });
+            $('#check-all-samples').change(function () { $('.sample-checkbox').prop('checked', $(this).prop('checked')); });
 
             function populateLocationsSelect() {
                 const $select = $('#location-select'); $select.empty();
@@ -895,14 +1103,14 @@
             $('input[name="collectionDate"]').on('input', updateLiveAging);
             function updateLiveAging() { $('#live-aging').text(calculateAging($('input[name="collectionDate"]').val())); }
 
-            $('#form-add-sample').submit(async function(e) {
+            $('#form-add-sample').submit(async function (e) {
                 e.preventDefault();
                 const qty = parseInt($('input[name="quantity"]').val()) || 1;
                 const baseName = $('input[name="name"]').val();
                 const newSamples = [];
-                for(let i = 0; i < qty; i++) {
+                for (let i = 0; i < qty; i++) {
                     const newSmp = {
-                        id: generateId(), name: qty > 1 ? `${baseName} (ขวดที่ ${i+1}/${qty})` : baseName,
+                        id: generateId(), name: qty > 1 ? `${baseName} (ขวดที่ ${i + 1}/${qty})` : baseName,
                         type: $('#sample-type-select').val(), proprietor: $('input[name="proprietor"]').val(),
                         degree: $('input[name="degree"]').val(), locationId: $('#location-select').val(),
                         collectionDate: $('input[name="collectionDate"]').val(), comment: $('textarea[name="comment"]').val()
@@ -933,7 +1141,7 @@
                 });
             }
 
-            $('#btn-add-location').click(function() {
+            $('#btn-add-location').click(function () {
                 Swal.fire({
                     title: 'เพิ่มสถานที่ใหม่', input: 'text', inputPlaceholder: 'เช่น ห้องบ่ม B...',
                     confirmButtonColor: '#009640', showCancelButton: true, confirmButtonText: 'บันทึก'
@@ -945,7 +1153,7 @@
                 });
             });
 
-            $(document).on('click', '.btn-delete-loc', function(e) {
+            $(document).on('click', '.btn-delete-loc', function (e) {
                 e.stopPropagation(); const id = $(this).data('id'); const count = parseInt($(this).data('count'));
                 if (count > 0) return Swal.fire({ title: 'ลบไม่ได้', text: 'มีข้อมูลถังค้างอยู่', icon: 'error', confirmButtonColor: '#009640' });
                 Swal.fire({ title: 'ยืนยันลบ?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'ลบ' }).then(async (res) => {
@@ -953,7 +1161,7 @@
                 });
             });
 
-            $(document).on('click', '.btn-view-loc-samples', function() {
+            $(document).on('click', '.btn-view-loc-samples', function () {
                 const locId = $(this).data('id'); const locName = getLocations().find(l => l.id === locId)?.name;
                 const samples = getSamples().filter(s => s.locationId === locId);
                 let html = `<div class="overflow-y-auto max-h-[50vh] text-xs"><table class="w-full text-left border-collapse"><thead><tr class="bg-gray-100"><th class="p-2">ID</th><th class="p-2">Name</th><th class="p-2">ดีกรี</th></tr></thead><tbody>`;
@@ -967,61 +1175,61 @@
                 const events = [];
                 getSamples().forEach(s => {
                     // 1. งานนำเข้า (History แรกสุด) ให้แสดงบนปฏิทินเสมอ ไม่ว่าจะถูกตัดสต๊อกไปแล้วหรือไม่ เพื่อเก็บเป็นประวัติย้อนหลัง
-                    events.push({ 
-                        title: `นำเข้า: ${s.name}`, 
-                        start: s.collectionDate, 
-                        backgroundColor: '#009640', 
-                        allDay: true, 
-                        extendedProps: { sample: s } 
+                    events.push({
+                        title: `นำเข้า: ${s.name}`,
+                        start: s.collectionDate,
+                        backgroundColor: '#009640',
+                        allDay: true,
+                        extendedProps: { sample: s }
                     });
-                    
+
                     let baseDate = dayjs(s.collectionDate);
                     const isWithdrawn = s.status === 'withdrawn';
                     const withdrawDay = isWithdrawn ? dayjs(s.withdrawDate) : null;
 
                     for (let i = 1; i <= 10; i++) {
                         const eventDate = baseDate.add(6 * i, 'month');
-                        
+
                         // ✅ ปรับ Logic ใหม่: ถ้าตัวอย่างถูกเบิกไปแล้ว และรอบตรวจสอบนี้เกิดขึ้น "หลังจาก" วันที่ทำการเบิกจ่าย ให้ข้ามรอบนั้นไปเลย (ลบรอบอนาคตออก)
                         // แต่ถ้ารอบตรวจสอบนั้นเกิดขึ้น "ก่อนหน้าหรือภายในวัน" ที่เบิกจ่าย (เป็นประวัติย้อนหลังที่ทำไปแล้ว) จะยังคงแสดงไว้ตามปกติ
                         if (isWithdrawn && eventDate.isAfter(withdrawDay, 'day')) {
-                            continue; 
+                            continue;
                         }
 
-                        events.push({ 
-                            title: `รอบ ${i*6} ด.: ${s.name}`, 
-                            start: eventDate.format('YYYY-MM-DD'), 
-                            backgroundColor: i % 2 === 0 ? '#D2B48C' : '#666666', 
-                            allDay: true, 
-                            extendedProps: { sample: s } 
+                        events.push({
+                            title: `รอบ ${i * 6} ด.: ${s.name}`,
+                            start: eventDate.format('YYYY-MM-DD'),
+                            backgroundColor: i % 2 === 0 ? '#D2B48C' : '#666666',
+                            allDay: true,
+                            extendedProps: { sample: s }
                         });
                     }
                 });
                 calendarInstance = new FullCalendar.Calendar(calendarEl, {
-                    initialView: window.innerWidth < 768 ? 'listMonth' : 'dayGridMonth', 
+                    initialView: window.innerWidth < 768 ? 'listMonth' : 'dayGridMonth',
                     events: events,
                     headerToolbar: { left: 'prev,next', center: 'title', right: 'dayGridMonth,listMonth' },
-                    eventClick: function(info) {
+                    eventClick: function (info) {
                         handleActionMenu(info.event.extendedProps.sample.id);
                     }
                 });
                 calendarInstance.render();
             }
 
-            $(document).on('click', '.btn-delete', function() {
+            $(document).on('click', '.btn-delete', function () {
                 const id = $(this).data('id');
                 const sample = getSamples().find(s => s.id === id);
-                if(!sample) return;
+                if (!sample) return;
 
-                Swal.fire({ 
-                    title: 'ระบุเหตุผลการตัด Stock', 
+                Swal.fire({
+                    title: 'ระบุเหตุผลการตัด Stock',
                     html: `
                         <p class="text-xs text-gray-500 mb-2 text-left">รหัส: <strong>${sample.name}</strong></p>
                         <textarea id="withdraw-reason" class="tms-input w-full h-24" placeholder="เช่น เบิกไปทำ Sensory Test, ส่งวิเคราะห์แล็บ, หมดอายุบ่ม..."></textarea>
                     `,
-                    icon: 'warning', 
-                    showCancelButton: true, 
-                    confirmButtonColor: '#d33', 
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
                     confirmButtonText: 'ยืนยันตัด Stock',
                     preConfirm: () => {
                         const reason = document.getElementById('withdraw-reason').value.trim();
@@ -1032,7 +1240,7 @@
                         return reason;
                     }
                 }).then(async (res) => {
-                    if (res.isConfirmed) { 
+                    if (res.isConfirmed) {
                         let samples = getSamples();
                         const index = samples.findIndex(s => s.id === id);
                         if (index !== -1) {
@@ -1040,9 +1248,9 @@
                             samples[index].withdrawReason = res.value;
                             samples[index].withdrawDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
                             addCustodyLog(samples[index], 'เบิก/ตัด Stock', currentUser?.username || 'System', `เหตุผล: ${res.value}`);
-                            
-                            await saveSamples(samples); 
-                            renderDashboard(); 
+
+                            await saveSamples(samples);
+                            renderDashboard();
                             if ($('#view-history').hasClass('active')) renderHistory();
                             Swal.fire({ title: 'บันทึกประวัติสำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false });
                         }
@@ -1050,7 +1258,7 @@
                 });
             });
 
-            $(document).on('click', '.btn-return', function() {
+            $(document).on('click', '.btn-return', function () {
                 const id = $(this).data('id');
                 Swal.fire({
                     title: 'ยืนยันการนำคืนคลัง?',
@@ -1074,7 +1282,7 @@
                 });
             });
 
-            $(document).on('click', '.btn-edit', function() {
+            $(document).on('click', '.btn-edit', function () {
                 const sample = getSamples().find(s => s.id === $(this).data('id')); if (!sample) return;
                 const typeOptions = getTypes().map(t => `<option value="${t}" ${t === sample.type ? 'selected' : ''}>${t}</option>`).join('');
                 const locOptions = getLocations().map(l => `<option value="${l.id}" ${l.id === sample.locationId ? 'selected' : ''}>${l.name}</option>`).join('');
@@ -1082,6 +1290,9 @@
                 Swal.fire({
                     title: `แก้ไข: ${sample.id}`,
                     html: `
+                        <div class="flex justify-center mb-4">
+                            <div id="edit-qr-container" class="p-2 border bg-white rounded shadow-sm"></div>
+                        </div>
                         <div class="text-left space-y-3 text-xs md:text-sm">
                             <div><label class="font-bold block mb-1">Rotation No.</label><input type="text" id="edit-name" class="tms-input w-full" value="${sample.name}"></div>
                             <div class="grid grid-cols-2 gap-2"><div><label class="font-bold">ประเภท</label><select id="edit-type" class="tms-input w-full">${typeOptions}</select></div><div><label class="font-bold">Proprietor</label><input type="text" id="edit-proprietor" class="tms-input w-full" value="${sample.proprietor || ''}"></div></div>
@@ -1092,15 +1303,20 @@
                     `,
                     showCancelButton: true, confirmButtonText: 'บันทึก', confirmButtonColor: '#009640',
                     width: window.innerWidth < 768 ? '95%' : '500px',
+                    didOpen: () => {
+                        new QRCode(document.getElementById('edit-qr-container'), {
+                            text: sample.id, width: 120, height: 120, colorDark: "#000", colorLight: "#fff", correctLevel: QRCode.CorrectLevel.L
+                        });
+                    },
                     preConfirm: () => ({ name: $('#edit-name').val(), type: $('#edit-type').val(), proprietor: $('#edit-proprietor').val(), degree: $('#edit-degree').val(), locationId: $('#edit-location').val(), collectionDate: $('#edit-date').val(), comment: $('#edit-comment').val() })
                 }).then(async (res) => {
                     if (res.isConfirmed) {
                         const samples = getSamples(); const index = samples.findIndex(s => s.id === sample.id);
-                        if (index !== -1) { 
-                            samples[index] = { ...samples[index], ...res.value }; 
+                        if (index !== -1) {
+                            samples[index] = { ...samples[index], ...res.value };
                             addCustodyLog(samples[index], 'แก้ไขข้อมูล', currentUser?.username || 'System', 'อัปเดตข้อมูลทั่วไป');
-                            await saveSamples(samples); 
-                            renderDashboard(); 
+                            await saveSamples(samples);
+                            renderDashboard();
                         }
                     }
                 });
@@ -1136,30 +1352,30 @@
                 $('#modal-sticker').removeClass('hidden');
             }
 
-            $(document).on('click', '.btn-reprint', function() { const sample = getSamples().find(s => s.id === $(this).data('id')); if (sample) showStickerModal([sample]); });
-            $('#btn-print-selected').click(function() {
-                const selectedIds = $('.sample-checkbox:checked').map(function() { return $(this).val(); }).get();
+            $(document).on('click', '.btn-reprint', function () { const sample = getSamples().find(s => s.id === $(this).data('id')); if (sample) showStickerModal([sample]); });
+            $('#btn-print-selected').click(function () {
+                const selectedIds = $('.sample-checkbox:checked').map(function () { return $(this).val(); }).get();
                 if (selectedIds.length === 0) return Swal.fire({ title: 'โปรดเลือกถังอย่างน้อย 1 รายการ', icon: 'warning', confirmButtonColor: '#009640' });
                 showStickerModal(getSamples().filter(s => selectedIds.includes(s.id)));
             });
 
-            $('.close-modal').click(function() { $(this).closest('.fixed').addClass('hidden'); });
-            $('#btn-print-sticker').click(function() { window.print(); });
+            $('.close-modal').click(function () { $(this).closest('.fixed').addClass('hidden'); });
+            $('#btn-print-sticker').click(function () { window.print(); });
 
-            $('#btn-scan').click(function() {
+            $('#btn-scan').click(function () {
                 $('#modal-scanner').removeClass('hidden'); $('#manual-scan-input').val('');
                 if (!html5QrcodeScanner) html5QrcodeScanner = new Html5Qrcode("qr-reader");
                 const config = { fps: 10, qrbox: window.innerWidth < 768 ? 200 : 250 };
-                html5QrcodeScanner.start({ facingMode: "environment" }, config, onScanSuccess, () => {});
+                html5QrcodeScanner.start({ facingMode: "environment" }, config, onScanSuccess, () => { });
             });
 
-            $('#close-scanner').click(function() {
+            $('#close-scanner').click(function () {
                 $('#modal-scanner').addClass('hidden');
                 if (html5QrcodeScanner && html5QrcodeScanner.isScanning) html5QrcodeScanner.stop();
             });
 
             function onScanSuccess(decodedText) { if (html5QrcodeScanner && html5QrcodeScanner.isScanning) html5QrcodeScanner.stop(); $('#modal-scanner').addClass('hidden'); handleScanResult(decodedText); }
-            $('#btn-manual-scan').click(function() { const val = $('#manual-scan-input').val().trim(); if (val) { if (html5QrcodeScanner && html5QrcodeScanner.isScanning) html5QrcodeScanner.stop(); $('#modal-scanner').addClass('hidden'); handleScanResult(val); } });
+            $('#btn-manual-scan').click(function () { const val = $('#manual-scan-input').val().trim(); if (val) { if (html5QrcodeScanner && html5QrcodeScanner.isScanning) html5QrcodeScanner.stop(); $('#modal-scanner').addClass('hidden'); handleScanResult(val); } });
 
             function handleScanResult(sampleId) {
                 handleActionMenu(sampleId);
@@ -1172,24 +1388,24 @@
                 const sample = getSamples().find(s => s.id === sampleId);
                 if (!sample) return Swal.fire({ title: 'ไม่พบรหัส!', icon: 'error', confirmButtonColor: '#009640' });
                 actionMenuSample = sample;
-                
+
                 $('#action-sample-info').html(`
                     <strong>รหัส:</strong> <span class="font-mono">${sample.id}</span><br>
                     <strong>ชื่อ:</strong> ${sample.name}<br>
                     <strong>ประเภท:</strong> ${sample.type} | <strong>ABV:</strong> ${sample.degree}%<br>
                     <strong>สถานะ:</strong> ${sample.status === 'withdrawn' ? '<span class="text-red-600">ตัดจ่ายออกแล้ว</span>' : sample.status === 'testing' ? '<span class="text-yellow-600">กำลังทดสอบ</span>' : '<span class="text-green-600">ปกติ (อยู่ในคลัง)</span>'}
                 `);
-                
+
                 $('#action-qr-container').empty();
                 actionMenuQrInst = new QRCode(document.getElementById('action-qr-container'), {
                     text: sample.id, width: 128, height: 128, colorDark: "#000", colorLight: "#fff", correctLevel: QRCode.CorrectLevel.L
                 });
-                
+
                 $('#modal-action').removeClass('hidden');
             }
 
-            $('#btn-action-lab').click(function() {
-                if(!actionMenuSample) return;
+            $('#btn-action-lab').click(function () {
+                if (!actionMenuSample) return;
                 $('#modal-action').addClass('hidden');
                 $('#lab-sample-id').val(actionMenuSample.id);
                 $('#form-lab-result')[0].reset();
@@ -1199,10 +1415,10 @@
                 $('#modal-lab-result').removeClass('hidden');
             });
 
-            $('#btn-action-test').click(function() {
-                if(!actionMenuSample) return;
-                if(actionMenuSample.status === 'testing' || actionMenuSample.status === 'withdrawn') {
-                    return Swal.fire({title: 'ไม่สามารถทำรายการได้', text: 'ตัวอย่างนี้ไม่อยู่ในสถานะปกติ', icon: 'warning'});
+            $('#btn-action-test').click(function () {
+                if (!actionMenuSample) return;
+                if (actionMenuSample.status === 'testing' || actionMenuSample.status === 'withdrawn') {
+                    return Swal.fire({ title: 'ไม่สามารถทำรายการได้', text: 'ตัวอย่างนี้ไม่อยู่ในสถานะปกติ', icon: 'warning' });
                 }
                 Swal.fire({
                     title: 'ระบุเหตุผลการนำไปทดสอบ',
@@ -1223,26 +1439,26 @@
                 });
             });
 
-            $('#btn-action-withdraw').click(function() {
-                if(!actionMenuSample) return;
-                if(actionMenuSample.status === 'withdrawn') {
-                    return Swal.fire({title: 'ถูกตัดจ่ายไปแล้ว', icon: 'warning'});
+            $('#btn-action-withdraw').click(function () {
+                if (!actionMenuSample) return;
+                if (actionMenuSample.status === 'withdrawn') {
+                    return Swal.fire({ title: 'ถูกตัดจ่ายไปแล้ว', icon: 'warning' });
                 }
                 $('#modal-action').addClass('hidden');
-                $('.btn-delete[data-id="'+actionMenuSample.id+'"]').click();
+                $('.btn-delete[data-id="' + actionMenuSample.id + '"]').click();
             });
 
             let currentLabFileBase64 = null;
             let currentLabFileMime = null;
             let currentLabFileName = null;
 
-            $('#lab-file').on('change', function(e) {
+            $('#lab-file').on('change', function (e) {
                 const file = e.target.files[0];
                 if (file) {
                     currentLabFileName = file.name;
                     currentLabFileMime = file.type;
                     const reader = new FileReader();
-                    reader.onload = function(evt) {
+                    reader.onload = function (evt) {
                         currentLabFileBase64 = evt.target.result.split(',')[1];
                     };
                     reader.readAsDataURL(file);
@@ -1253,14 +1469,14 @@
                 }
             });
 
-            $('#form-lab-result').submit(async function(e) {
+            $('#form-lab-result').submit(async function (e) {
                 e.preventDefault();
                 const sampleId = $('#lab-sample-id').val();
-                let samples = getSamples(); 
+                let samples = getSamples();
                 const index = samples.findIndex(s => s.id === sampleId);
                 if (index !== -1) {
                     if (!samples[index].labResults) samples[index].labResults = [];
-                    
+
                     Swal.fire({ title: 'กำลังบันทึก...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
                     let fileUrl = null;
@@ -1276,17 +1492,21 @@
                         abv: $('#lab-abv').val(),
                         ph: $('#lab-ph').val(),
                         turbidity: $('#lab-turbidity').val(),
+                        aldehyde: $('#lab-aldehyde').val(),
+                        acid: $('#lab-acid').val(),
+                        fuselOil: $('#lab-fusel-oil').val(),
+                        ester: $('#lab-ester').val(),
                         file: currentLabFileName || '-',
                         date: dayjs().format('YYYY-MM-DD HH:mm:ss')
                     };
-                    
+
                     samples[index].labResults.push(resultData);
                     samples[index].comment = (samples[index].comment ? samples[index].comment + '\n' : '') + `[${dayjs().format('DD/MM/YY HH:mm')}] บันทึกผลตรวจวิเคราะห์`;
-                    
+
                     addCustodyLog(samples[index], 'บันทึกผลแล็บ', currentUser?.username || 'System', `ABV:${resultData.abv}%, pH:${resultData.ph}, Turbidity:${resultData.turbidity}`, fileUrl);
-                    
-                    await saveSamples(samples); 
-                    
+
+                    await saveSamples(samples);
+
                     // Attempt Google Drive upload in background if Apps Script is configured
                     if (currentLabFileBase64 && SCRIPT_URL && SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
                         try {
@@ -1295,7 +1515,7 @@
                                 mode: 'no-cors',
                                 body: JSON.stringify({ action: 'uploadFile', filename: currentLabFileName, mimeType: currentLabFileMime, data: currentLabFileBase64 })
                             }).catch(console.error);
-                        } catch (e) {}
+                        } catch (e) { }
                     }
 
                     renderDashboard();
@@ -1304,14 +1524,14 @@
                 }
             });
 
-            $(document).on('click', '.btn-history', function() {
+            $(document).on('click', '.btn-history', function () {
                 const sampleId = $(this).data('id');
                 const sample = getSamples().find(s => s.id === sampleId);
                 if (!sample) return;
-                
+
                 const $content = $('#custody-history-content');
                 $content.empty();
-                
+
                 if (!sample.custodyLogs || sample.custodyLogs.length === 0) {
                     $content.append('<div class="text-gray-500 text-center py-4">ยังไม่มีประวัติการเคลื่อนย้าย</div>');
                 } else {
@@ -1327,7 +1547,7 @@
                     // Reverse to show newest first
                     [...logs].reverse().forEach(log => {
                         if (!log || typeof log !== 'object') return;
-                        
+
                         const ts = log.timestamp || log.date || '-';
                         const u = log.user || '-';
                         const act = log.action || log.type || '-';
@@ -1344,19 +1564,42 @@
                         `);
                     });
                 }
-                
+
                 $('#modal-custody-history').removeClass('hidden');
             });
 
-            $('#btn-settings').click(function() {
+            $('#btn-settings').click(function () {
                 Swal.fire({
-                    title: 'เชื่อมต่อ API',
-                    html: `<div class="text-left text-xs"><input type="text" id="endpoint-url-input" class="tms-input w-full mb-2" value="${SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL' ? '' : SCRIPT_URL}"><button id="btn-save-endpoint" class="w-full bg-[#009640] text-white py-2 rounded">บันทึก Sync</button></div>`,
-                    showConfirmButton: false, showCancelButton: true
-                });
-                $('#btn-save-endpoint').click(async function() {
-                    const newUrl = $('#endpoint-url-input').val().trim();
-                    if(newUrl) { SCRIPT_URL = newUrl; localStorage.setItem('tms_script_url', newUrl); Swal.close(); await syncAllData(); renderDashboard(); }
+                    title: 'Secure Login',
+                    html: `
+                        <input type="text" id="sa-username" class="swal2-input" placeholder="ID">
+                        <input type="password" id="sa-password" class="swal2-input" placeholder="Password">
+                    `,
+                    confirmButtonText: 'เข้าสู่ระบบ',
+                    confirmButtonColor: '#009640',
+                    showCancelButton: true,
+                    preConfirm: () => {
+                        const u = Swal.getPopup().querySelector('#sa-username').value;
+                        const p = Swal.getPopup().querySelector('#sa-password').value;
+                        if (!u || !p) { Swal.showValidationMessage(`กรุณากรอกข้อมูลให้ครบถ้วน`); }
+                        return { u: u, p: p }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (result.value.u === 'superadmin' && result.value.p === 'superadmin') {
+                            Swal.fire({
+                                title: 'เชื่อมต่อ API',
+                                html: `<div class="text-left text-xs"><input type="text" id="endpoint-url-input" class="tms-input w-full mb-2" value="${SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL' ? '' : SCRIPT_URL}"><button id="btn-save-endpoint" class="w-full bg-[#009640] text-white py-2 rounded">บันทึก Sync</button></div>`,
+                                showConfirmButton: false, showCancelButton: true
+                            });
+                            $('#btn-save-endpoint').click(async function () {
+                                const newUrl = $('#endpoint-url-input').val().trim();
+                                if (newUrl) { SCRIPT_URL = newUrl; localStorage.setItem('tms_script_url', newUrl); Swal.close(); await syncAllData(); renderDashboard(); }
+                            });
+                        } else {
+                            Swal.fire({ title: 'เข้าสู่ระบบล้มเหลว', text: 'ID หรือ Password ไม่ถูกต้อง', icon: 'error', confirmButtonColor: '#009640' });
+                        }
+                    }
                 });
             }); // ✅ ปิดวงเล็บของปุ่ม Settings ตรงนี้ เพื่อไม่ให้ไปครอบฟังก์ชันอื่น
 
@@ -1364,10 +1607,10 @@
             function renderHistory() {
                 const samples = getSamples();
                 const withdrawnSamples = samples.filter(s => s.status === 'withdrawn').sort((a, b) => new Date(b.withdrawDate) - new Date(a.withdrawDate));
-                
+
                 const $tbody = $('#history-table-body');
                 $tbody.empty();
-                
+
                 if (withdrawnSamples.length === 0) {
                     $tbody.append(`<tr><td colspan="5" class="p-6 text-center text-gray-400">ยังไม่มีประวัติการเบิกจ่าย</td></tr>`);
                 } else {
@@ -1388,12 +1631,12 @@
             }
 
             // ผูก Event ให้โหลดข้อมูลหน้าประวัติเมื่อสลับเมนู
-            $(document).on('click', '.nav-btn[data-target="history"]', function() {
+            $(document).on('click', '.nav-btn[data-target="history"]', function () {
                 renderHistory();
             });
 
             // Event สำหรับการกดนำกลับคืนคลัง (Restore)
-            $(document).on('click', '.btn-restore', function() {
+            $(document).on('click', '.btn-restore', function () {
                 const id = $(this).data('id');
                 Swal.fire({
                     title: 'ยืนยันนำตัวอย่างนี้กลับเข้าคลัง?',
@@ -1410,10 +1653,10 @@
                             samples[index].status = 'active';
                             const restoreLog = `\n[นำกลับคืนเมื่อ ${dayjs().format('DD/MM/YY')}] เดิมตัดออกเพราะ: ${samples[index].withdrawReason}`;
                             samples[index].comment = (samples[index].comment ? samples[index].comment : '') + restoreLog;
-                            
+
                             delete samples[index].withdrawReason;
                             delete samples[index].withdrawDate;
-                            
+
                             await saveSamples(samples);
                             renderHistory();
                             Swal.fire({ title: 'คืนเข้าคลังเรียบร้อย', icon: 'success', timer: 1500, showConfirmButton: false });
@@ -1425,4 +1668,5 @@
         }); // สิ้นสุด document.ready
     </script>
 </body>
+
 </html>
